@@ -41,21 +41,22 @@ fun ChatMessageReactions(modifier: Modifier) {
 
     val rotationEffect by animateFloatAsState(
       targetValue = if (isShowReaction) 0f else -45f,
-      animationSpec = spring(0.15f, stiffness = 270f)
+      animationSpec = spring(0.35f, stiffness = 270f)
     )
 
     val textOffset by animateDpAsState(
       targetValue = if (isShowReaction) 0.dp else (-15).dp,
-      animationSpec = spring(0.15f, stiffness = 270f),
+      animationSpec = spring(0.35f, stiffness = 270f),
     )
 
     val textOffset2 by animateDpAsState(
       targetValue = if (isShowReaction) 0.dp else (15).dp,
-      animationSpec = spring(0.15f, stiffness = 270f),
+      animationSpec = spring(0.35f, stiffness = 270f),
     )
 
     LaunchedEffect(true) {
       isShowReaction = !isShowReaction
+
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally){
@@ -71,7 +72,7 @@ fun ChatMessageReactions(modifier: Modifier) {
           .graphicsLayer(
             scaleX = scaleEffect,
             scaleY = scaleEffect,
-            transformOrigin = TransformOrigin(1f, 0f)
+            transformOrigin = topTrailing()
           )
           .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(28.dp))
       ) {
@@ -83,7 +84,7 @@ fun ChatMessageReactions(modifier: Modifier) {
             Modifier
               .graphicsLayer(
                 scaleX = scaleEffect, scaleY = scaleEffect,
-                transformOrigin = TransformOrigin(0.5f, 1f), rotationZ = rotationEffect
+                transformOrigin = bottomLeading(), rotationZ = rotationEffect
               )
               .offset(x = textOffset),
             style = Typography.h4
@@ -94,7 +95,7 @@ fun ChatMessageReactions(modifier: Modifier) {
               .graphicsLayer(
                 scaleX = scaleEffect,
                 scaleY = scaleEffect,
-                transformOrigin = TransformOrigin(0f, 1f)
+                transformOrigin = bottom()
               )
               .offset(x = textOffset),
             style = Typography.h4
@@ -105,9 +106,9 @@ fun ChatMessageReactions(modifier: Modifier) {
               .graphicsLayer(
                 scaleX = scaleEffect,
                 scaleY = scaleEffect,
-                transformOrigin = TransformOrigin(1f, 0f)
+                transformOrigin = topTrailing()
               )
-              .rotate(if (isShowReaction) 0f else 45f)
+              .rotate(rotationEffect)
               .offset(x = textOffset),
             style = Typography.h4
           )
@@ -117,9 +118,9 @@ fun ChatMessageReactions(modifier: Modifier) {
               .graphicsLayer(
                 scaleX = scaleEffect,
                 scaleY = scaleEffect,
-                transformOrigin = TransformOrigin(0.5f, 1f)
+                transformOrigin = bottom()
               )
-              .rotate(if (isShowReaction) 0f else 45f),
+              .rotate(rotationEffect),
             style = Typography.h4
           )
           Text(
@@ -128,18 +129,25 @@ fun ChatMessageReactions(modifier: Modifier) {
               .graphicsLayer(
                 scaleX = scaleEffect,
                 scaleY = scaleEffect,
-                transformOrigin = TransformOrigin(1f, 1f)
+                transformOrigin = bottomTrailing()
               )
               .offset(x = textOffset2),
             style = Typography.h4
           )
         }
-
       }
-
-
     }
-
-
   }
 }
+
+@Composable
+private fun bottom() = TransformOrigin(0.5f, 1f)
+
+@Composable
+private fun bottomTrailing() = TransformOrigin(1f, 1f)
+
+@Composable
+private fun bottomLeading() = TransformOrigin(0.5f, 1f)
+
+@Composable
+private fun topTrailing() = TransformOrigin(1f, 0f)
