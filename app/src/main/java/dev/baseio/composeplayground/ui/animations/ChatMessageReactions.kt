@@ -73,10 +73,10 @@ fun ChatMessageReactions(modifier: Modifier) {
             scaleY = scaleEffect,
             transformOrigin = TransformOrigin(1f, 0f)
           )
-          .background(Color(0xff202938), RoundedCornerShape(28.dp))
+          .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(28.dp))
       ) {
         Row(
-          Modifier
+          Modifier.padding(8.dp)
         ) {
           Text(
             "❤️",
