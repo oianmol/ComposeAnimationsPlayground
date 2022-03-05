@@ -2,11 +2,15 @@ package dev.baseio.composeplayground.ui.animations
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -54,7 +58,17 @@ fun PullToRefreshOne() {
           detectVerticalDragGestures(
             onDragStart = {},
             onDragCancel = {},
-            onDragEnd = {},
+            onDragEnd = {
+              if (animateOffset.targetValue > height / 2) {
+                coroutineScope.launch {
+                  animateOffset.animateTo(0f, animationSpec = tween(500))
+                }
+              } else {
+                coroutineScope.launch {
+                  animateOffset.animateTo(height, animationSpec = tween(500))
+                }
+              }
+            },
             onVerticalDrag = { change, dragAmount ->
               val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount)
               val newDragValueMain = Offset(x = 0f, y = summedMain.y.coerceIn(0f, height))
@@ -88,7 +102,13 @@ fun RandomCard(color: Color) {
       .height(200.dp)
       .background(color)
   ) {
-
+    Icon(
+      imageVector = Icons.Filled.ShoppingCart,
+      contentDescription = null,
+      modifier = Modifier
+        .size(120.dp)
+        .align(Alignment.Center), tint = Color.White
+    )
   }
 }
 
