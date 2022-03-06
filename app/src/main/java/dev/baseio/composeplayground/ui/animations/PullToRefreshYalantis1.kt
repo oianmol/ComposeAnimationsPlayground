@@ -4,7 +4,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -292,12 +291,7 @@ private fun CloudPlaneComposable(
   centerCloud: Float,
   dividerHeight: Float
 ) {
-  Box(
-    Modifier
-      .fillMaxWidth()
-      .height(200.dp)
-      .background(if (isSystemInDarkTheme()) Color.Black else Color(0xff1fb4ff))
-  ) {
+  Sky {
     Image(
       painter = painterResource(id = R.drawable.airplane),
       contentDescription = null,
@@ -310,10 +304,11 @@ private fun CloudPlaneComposable(
         }
     )
 
-    CloudsBottom(cloudsZoom, centerCloud)
+    it.CloudsBottom(cloudsZoom, centerCloud)
 
-    ArrowsExpanding(dividerHeight)
+    it.ArrowsExpanding(dividerHeight)
   }
+
 }
 
 @Composable
