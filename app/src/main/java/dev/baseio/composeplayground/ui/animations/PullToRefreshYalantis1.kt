@@ -86,17 +86,14 @@ fun PullToRefreshOne() {
     ) { newY ->
       coroutineScope.launch {
         val newScale = abs(heightOfRefreshView / newY)
-        Log.e("new scale", newScale.toString())
         cloudsZoom.animateTo(max(1f, min(2f, newScale)))
       }
       coroutineScope.launch {
         val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
-        Log.e(this.javaClass.simpleName, newAirplaneX.toString())
         airplaneOffsetX.animateTo(newAirplaneX)
       }
       coroutineScope.launch {
         val newAirplaneY = airplaneYPixels.times(abs(newY / heightOfRefreshView))
-        Log.e(this.javaClass.simpleName, newAirplaneY.toString())
         airplaneOffsetY.animateTo(min(newAirplaneY, airplaneYPixels))
       }
     }
@@ -126,7 +123,8 @@ private fun CloudList(
           onDragStart = {},
           onDragCancel = {},
           onDragEnd = {
-            if (animateOffset.value > heightOfRefreshView / 2) {
+            Log.e("animateOffset.value",animateOffset.value.toString())
+            if (animateOffset.value > -heightOfRefreshView / 2) {
               coroutineScope.launch {
                 animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
               }
