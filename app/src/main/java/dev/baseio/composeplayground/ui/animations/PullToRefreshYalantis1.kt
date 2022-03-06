@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.R
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
@@ -36,6 +38,10 @@ import kotlin.math.min
  */
 @Composable
 fun PullToRefreshOne() {
+
+  val canAcceptTouch = remember {
+    mutableStateOf(true)
+  }
 
   val coroutineScope = rememberCoroutineScope()
   val animateOffset = remember {
@@ -54,9 +60,11 @@ fun PullToRefreshOne() {
     220.dp.toPx()
   }
 
-  val airplaneXPixels = with(LocalDensity.current) {
-    (LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.2f)
+  val widthScreen = with(LocalDensity.current) {
+    LocalConfiguration.current.screenWidthDp.dp.toPx()
   }
+
+  val airplaneXPixels = (widthScreen * 0.2f)
 
   val airplaneYPixels = (heightOfRefreshView * 1.2f)
 
@@ -73,10 +81,6 @@ fun PullToRefreshOne() {
 
   val airplaneVerticalOffset = with(LocalDensity.current) {
     2.dp.toPx()
-  }
-
-  val canAcceptTouch = remember {
-    mutableStateOf(true)
   }
 
   Box(
@@ -101,18 +105,17 @@ fun PullToRefreshOne() {
           airplaneXPixels,
           airplaneOffsetX,
           airplaneYPixels,
-          airplaneOffsetY
+          airplaneOffsetY, widthScreen
         )
       }, {
+        canAcceptTouch.value = false
+
         upDownAirplaneMove(
           airplaneOffsetY,
           airplaneVerticalOffset,
           animateOffset,
-          heightOfRefreshView
+          heightOfRefreshView, airplaneOffsetX, widthScreen, coroutineScope
         )
-      },
-      { value ->
-        canAcceptTouch.value = value
       }, canAcceptTouch.value
     )
   }
@@ -127,7 +130,8 @@ private fun onRefreshViewTranslated(
   airplaneXPixels: Float,
   airplaneOffsetX: Animatable<Float, AnimationVector1D>,
   airplaneYPixels: Float,
-  airplaneOffsetY: Animatable<Float, AnimationVector1D>
+  airplaneOffsetY: Animatable<Float, AnimationVector1D>,
+  widthScreen: Float
 ) {
   coroutineScope.launch {
     val newScale = abs(heightOfRefreshView / newY)
@@ -139,7 +143,7 @@ private fun onRefreshViewTranslated(
   }
   coroutineScope.launch {
     val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
-    airplaneOffsetX.animateTo(newAirplaneX)
+    airplaneOffsetX.animateTo(min(newAirplaneX, widthScreen / 1.8f))
   }
   coroutineScope.launch {
     val newAirplaneY = airplaneYPixels.times(abs(newY / heightOfRefreshView))
@@ -151,7 +155,10 @@ private suspend fun upDownAirplaneMove(
   airplaneOffsetY: Animatable<Float, AnimationVector1D>,
   airplaneVerticalOffset: Float,
   animateOffset: Animatable<Float, AnimationVector1D>,
-  heightOfRefreshView: Float
+  heightOfRefreshView: Float,
+  airplaneOffsetX: Animatable<Float, AnimationVector1D>,
+  widthScreen: Float,
+  coroutineScope: CoroutineScope
 ) {
   var first = true
   val currentOffset = airplaneOffsetY.value
@@ -162,6 +169,14 @@ private suspend fun upDownAirplaneMove(
     )
     first = !first
   }
+  val airplaneXJob = coroutineScope.launch {
+    airplaneOffsetX.animateTo(widthScreen, animationSpec = tween(500))
+  }
+  val airplaneYJob = coroutineScope.launch {
+    airplaneOffsetY.animateTo(0f, animationSpec = tween(500))
+  }
+
+  joinAll(airplaneXJob, airplaneYJob)
   animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
 }
 
@@ -176,11 +191,8 @@ private fun CloudList(
   coroutineScope: CoroutineScope,
   onUpdate: (Float) -> Unit,
   loadData: suspend () -> Unit,
-  canAcceptTouchInvoker: (Boolean) -> Unit,
   canAcceptTouch: Boolean,
 ) {
-
-
   Column(
     Modifier
       .offset {
@@ -189,32 +201,31 @@ private fun CloudList(
           animateOffset.value.toInt()
         )
       }
-      .pointerInput(Unit) {
+      .pointerInput(canAcceptTouch) {
         detectVerticalDragGestures(
           onDragStart = {},
           onDragCancel = {},
           onDragEnd = {
-
+            if (animateOffset.value >= (-heightOfRefreshView / 1.6)) {
+              coroutineScope.launch {
+                loadData()
+              }
+            } else {
+              coroutineScope.launch {
+                animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(50))
+              }
+            }
           },
           onVerticalDrag = { change, dragAmount ->
-            if (!canAcceptTouch) {
-              return@detectVerticalDragGestures
-            }
             val summedMain =
               Offset(x = 0f, y = animateOffset.targetValue + dragAmount.times(RESISTANCE_SCROLL))
             val newDragValueMain =
               Offset(x = 0f, y = min(0f, max(-heightOfRefreshView, summedMain.y)))
             change.consumePositionChange()
-            if (newDragValueMain.y >= (-heightOfRefreshView / 2.2)) {
-              coroutineScope.launch {
-                canAcceptTouchInvoker.invoke(false)
-                loadData()
-              }
-            } else {
-              onUpdate(newDragValueMain.y)
-              coroutineScope.launch {
-                animateOffset.animateTo(newDragValueMain.y, animationSpec = tween(50))
-              }
+            onUpdate(newDragValueMain.y)
+
+            coroutineScope.launch {
+              animateOffset.animateTo(newDragValueMain.y, animationSpec = tween(50))
             }
 
           })
@@ -255,7 +266,7 @@ fun RandomCard(color: Color) {
 }
 
 
-const val RESISTANCE_SCROLL = 0.5f
+const val RESISTANCE_SCROLL = 0.3f
 val yellow = Color(0xffefa92f)
 val green = Color(0xff079c6d)
 val red = Color(0xffe35050)
