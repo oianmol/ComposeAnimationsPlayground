@@ -86,7 +86,7 @@ fun PullToRefreshOne() {
     ) { newY ->
       coroutineScope.launch {
         val newScale = abs(heightOfRefreshView / newY)
-        Log.e("new scale",newScale.toString())
+        Log.e("new scale", newScale.toString())
         cloudsZoom.animateTo(max(1f, min(2f, newScale)))
       }
       coroutineScope.launch {
@@ -126,10 +126,14 @@ private fun CloudList(
           onDragStart = {},
           onDragCancel = {},
           onDragEnd = {
-
+            if (animateOffset.value > heightOfRefreshView / 2) {
+              coroutineScope.launch {
+                animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
+              }
+            }
           },
           onVerticalDrag = { change, dragAmount ->
-            val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount)
+            val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount.times(0.5f))
             val newDragValueMain =
               Offset(x = 0f, y = min(0f, max(-heightOfRefreshView, summedMain.y)))
             change.consumePositionChange()
