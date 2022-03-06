@@ -47,16 +47,20 @@ fun PullToRefreshOne() {
     Animatable(0f)
   }
 
-  val cloudsZoom = remember {
-    Animatable(1f)
+  val sideCloudScale = remember {
+    Animatable(1.05f)
+  }
+
+  val centerCloudScale = remember {
+    Animatable(0.8f)
   }
 
   val heightOfRefreshView = with(LocalDensity.current) {
-    200.dp.toPx()
+    120.dp.toPx()
   }
 
   val airplaneXPixels = with(LocalDensity.current) {
-    (LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.3f)
+    (LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.2f)
   }
 
   val airplaneYPixels = (heightOfRefreshView * 1.2f)
@@ -80,13 +84,18 @@ fun PullToRefreshOne() {
       animateOffset,
       airplaneOffsetX,
       airplaneOffsetY,
-      cloudsZoom,
+      sideCloudScale,
+      centerCloudScale,
       heightOfRefreshView,
       coroutineScope
     ) { newY ->
       coroutineScope.launch {
         val newScale = abs(heightOfRefreshView / newY)
-        cloudsZoom.animateTo(max(1f, min(2f, newScale)))
+        sideCloudScale.animateTo(max(1f, min(1.55f, newScale)))
+      }
+      coroutineScope.launch {
+        val newScale = abs(heightOfRefreshView / newY)
+        centerCloudScale.animateTo(max(1f, min(1.30f, newScale)))
       }
       coroutineScope.launch {
         val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
@@ -106,6 +115,7 @@ private fun CloudList(
   airplaneOffsetX: Animatable<Float, AnimationVector1D>,
   airplaneOffsetY: Animatable<Float, AnimationVector1D>,
   cloudsZoom: Animatable<Float, AnimationVector1D>,
+  centerCloudScale: Animatable<Float, AnimationVector1D>,
   heightOfRefreshView: Float,
   coroutineScope: CoroutineScope,
   onUpdate: (Float) -> Unit
@@ -131,7 +141,7 @@ private fun CloudList(
             }
           },
           onVerticalDrag = { change, dragAmount ->
-            val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount.times(0.5f))
+            val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount.times(RESISTANCE_SCROLL))
             val newDragValueMain =
               Offset(x = 0f, y = min(0f, max(-heightOfRefreshView, summedMain.y)))
             change.consumePositionChange()
@@ -142,7 +152,7 @@ private fun CloudList(
           })
       }) {
 
-    CloudPlaneComposable(airplaneOffsetX.value, airplaneOffsetY.value, cloudsZoom.value)
+    CloudPlaneComposable(airplaneOffsetX.value, airplaneOffsetY.value, cloudsZoom.value,centerCloudScale.value)
 
     RandomCard(yellow)
 
@@ -163,20 +173,21 @@ fun RandomCard(color: Color) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(200.dp)
+      .height(120.dp)
       .background(color)
   ) {
     Icon(
       imageVector = Icons.Filled.ShoppingCart,
       contentDescription = null,
       modifier = Modifier
-        .size(200.dp)
+        .size(120.dp)
         .align(Alignment.Center), tint = Color.White
     )
   }
 }
 
 
+const val RESISTANCE_SCROLL = 0.5f
 val yellow = Color(0xffefa92f)
 val green = Color(0xff079c6d)
 val red = Color(0xffe35050)
@@ -185,12 +196,13 @@ val red = Color(0xffe35050)
 private fun CloudPlaneComposable(
   airplaneOffsetX: Float,
   airplaneOffsetY: Float,
-  cloudsZoom: Float
+  cloudsZoom: Float,
+  centerCloud: Float
 ) {
   Box(
     Modifier
       .fillMaxWidth()
-      .height(200.dp)
+      .height(120.dp)
       .background(if (isSystemInDarkTheme()) Color.Black else Color(0xff1fb4ff))
   ) {
     Image(
@@ -200,7 +212,7 @@ private fun CloudPlaneComposable(
         .offset { IntOffset(airplaneOffsetX.toInt(), airplaneOffsetY.toInt()) }
     )
 
-    CloudsBottom(cloudsZoom)
+    CloudsBottom(cloudsZoom,centerCloud)
 
     ArrowsExpanding()
   }
@@ -215,11 +227,13 @@ private fun BoxScope.ArrowsExpanding() {
   ) {
 
 
+
+
   }
 }
 
 @Composable
-private fun BoxScope.CloudsBottom(cloudsZoom: Float) {
+private fun BoxScope.CloudsBottom(cloudsZoom: Float, centerCloud: Float) {
   Box(
     Modifier.Companion
       .align(Alignment.BottomCenter)
@@ -238,7 +252,7 @@ private fun BoxScope.CloudsBottom(cloudsZoom: Float) {
       painter = painterResource(id = R.drawable.clouds_left),
       contentDescription = null,
       Modifier
-        .scale(cloudsZoom)
+        .scale(centerCloud)
         .align(Alignment.BottomEnd)
     )
 
