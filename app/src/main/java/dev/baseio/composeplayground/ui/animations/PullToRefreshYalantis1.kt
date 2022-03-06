@@ -58,13 +58,6 @@ fun PullToRefreshOne() {
     Animatable(0.8f)
   }
 
-  val sideCloudTranslate = remember {
-    Animatable(0f)
-  }
-  val centerCloudTranslate = remember {
-    Animatable(0f)
-  }
-
   val widthScreen = with(LocalDensity.current) {
     LocalConfiguration.current.screenWidthDp.dp.toPx()
   }
@@ -80,7 +73,7 @@ fun PullToRefreshOne() {
   }
 
   val airplaneVerticalOffset = with(LocalDensity.current) {
-    2.dp.toPx()
+    4.dp.toPx()
   }
 
   Box(
@@ -117,7 +110,7 @@ fun PullToRefreshOne() {
           heightOfRefreshView,
           airplaneOffsetX,
           widthScreen,
-          coroutineScope, sideCloudTranslate, centerCloudTranslate
+          coroutineScope
         )
 
         canAcceptTouch.value = true
@@ -153,7 +146,7 @@ private fun onRefreshViewTranslated(
   }
   coroutineScope.launch {
     val newAirplaneY = airplaneYPixels.times(abs(refreshViewCurrentHeight / heightOfRefreshView))
-    airplaneOffsetY.animateTo(min(newAirplaneY, airplaneYPixels))
+    airplaneOffsetY.animateTo(max(newAirplaneY, heightOfRefreshView/2))
   }
 }
 
@@ -164,45 +157,19 @@ private suspend fun upDownAirplaneMove(
   heightOfRefreshView: Float,
   airplaneOffsetX: Animatable<Float, AnimationVector1D>,
   widthScreen: Float,
-  coroutineScope: CoroutineScope,
-  sideCloudScale: Animatable<Float, AnimationVector1D>,
-  centerCloudScale: Animatable<Float, AnimationVector1D>
+  coroutineScope: CoroutineScope
 ) {
-  var first = true
-  val currentOffset = airplaneOffsetY.value
-  val sideCloudCurrentScale = sideCloudScale.value
-  val centerCloudCurrentScale = centerCloudScale.value
+  val currentPlaneOffsetY = airplaneOffsetY.value
+
   repeat(10) {
-    val cloudScaleOffset = 0.3f
-    val sideCloudJob = coroutineScope.launch {
-      sideCloudScale.animateTo(
-        if (first) (sideCloudCurrentScale.minus(cloudScaleOffset))
-        else (centerCloudCurrentScale.plus(
-          cloudScaleOffset
-        )),
-        tween(390, easing = FastOutLinearInEasing)
-      )
-    }
-    val centerCloudJob = coroutineScope.launch {
-      centerCloudScale.animateTo(
-        if (first) (sideCloudCurrentScale.minus(cloudScaleOffset))
-        else (centerCloudCurrentScale.plus(
-          cloudScaleOffset
-        )),
-        tween(390, easing = FastOutLinearInEasing)
-      )
-    }
-    val airplaneOffsetYJob = coroutineScope.launch {
-      airplaneOffsetY.animateTo(
-        if (first) (currentOffset.minus(airplaneVerticalOffset)) else (currentOffset.plus(
-          airplaneVerticalOffset
-        )),
-        tween(390, easing = FastOutLinearInEasing)
-      )
-    }
-    joinAll(airplaneOffsetYJob, sideCloudJob, centerCloudJob)
-    first = !first
+    airplaneOffsetY.animateTo(
+      if (it % 2 != 0) (currentPlaneOffsetY.minus(airplaneVerticalOffset)) else (currentPlaneOffsetY.plus(
+        airplaneVerticalOffset
+      )),
+      tween(390, easing = FastOutLinearInEasing)
+    )
   }
+
   val airplaneXJob = coroutineScope.launch {
     airplaneOffsetX.animateTo(widthScreen, animationSpec = tween(500))
   }
@@ -211,7 +178,7 @@ private suspend fun upDownAirplaneMove(
   }
 
   joinAll(airplaneXJob, airplaneYJob)
-  animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
+  animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(250))
 }
 
 @Composable
@@ -372,7 +339,10 @@ private fun BoxScope.ArrowsExpanding() {
 }
 
 @Composable
-private fun BoxScope.CloudsBottom(cloudsZoom: Float, centerCloud: Float) {
+private fun BoxScope.CloudsBottom(
+  cloudsZoom: Float,
+  centerCloud: Float,
+) {
   Box(
     Modifier.Companion
       .align(Alignment.BottomCenter)
