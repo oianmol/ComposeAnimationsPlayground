@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.R
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -43,21 +42,27 @@ fun PullToRefreshOne() {
     mutableStateOf(true)
   }
 
+  val heightOfRefreshView = with(LocalDensity.current) {
+    200.dp.toPx()
+  }
+
   val coroutineScope = rememberCoroutineScope()
   val animateOffset = remember {
-    Animatable(0f)
+    Animatable(-heightOfRefreshView)
   }
 
   val sideCloudScale = remember {
     Animatable(1.05f)
   }
-
   val centerCloudScale = remember {
     Animatable(0.8f)
   }
 
-  val heightOfRefreshView = with(LocalDensity.current) {
-    220.dp.toPx()
+  val sideCloudTranslate = remember {
+    Animatable(0f)
+  }
+  val centerCloudTranslate = remember {
+    Animatable(0f)
   }
 
   val widthScreen = with(LocalDensity.current) {
@@ -65,7 +70,6 @@ fun PullToRefreshOne() {
   }
 
   val airplaneXPixels = (widthScreen * 0.2f)
-
   val airplaneYPixels = (heightOfRefreshView * 1.2f)
 
   val airplaneOffsetX = remember {
@@ -73,10 +77,6 @@ fun PullToRefreshOne() {
   }
   val airplaneOffsetY = remember {
     Animatable(airplaneYPixels)
-  }
-
-  LaunchedEffect(true) {
-    animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
   }
 
   val airplaneVerticalOffset = with(LocalDensity.current) {
@@ -114,8 +114,14 @@ fun PullToRefreshOne() {
           airplaneOffsetY,
           airplaneVerticalOffset,
           animateOffset,
-          heightOfRefreshView, airplaneOffsetX, widthScreen, coroutineScope
+          heightOfRefreshView,
+          airplaneOffsetX,
+          widthScreen,
+          coroutineScope, sideCloudTranslate, centerCloudTranslate
         )
+
+        canAcceptTouch.value = true
+
       }, canAcceptTouch.value
     )
   }
@@ -124,7 +130,7 @@ fun PullToRefreshOne() {
 private fun onRefreshViewTranslated(
   coroutineScope: CoroutineScope,
   heightOfRefreshView: Float,
-  newY: Float,
+  refreshViewCurrentHeight: Float,
   sideCloudScale: Animatable<Float, AnimationVector1D>,
   centerCloudScale: Animatable<Float, AnimationVector1D>,
   airplaneXPixels: Float,
@@ -134,19 +140,19 @@ private fun onRefreshViewTranslated(
   widthScreen: Float
 ) {
   coroutineScope.launch {
-    val newScale = abs(heightOfRefreshView / newY)
+    val newScale = abs(heightOfRefreshView / refreshViewCurrentHeight)
     sideCloudScale.animateTo(max(1f, min(1.55f, newScale)))
   }
   coroutineScope.launch {
-    val newScale = abs(heightOfRefreshView / newY)
+    val newScale = abs(heightOfRefreshView / refreshViewCurrentHeight)
     centerCloudScale.animateTo(max(1f, min(1.30f, newScale)))
   }
   coroutineScope.launch {
-    val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
-    airplaneOffsetX.animateTo(min(newAirplaneX, widthScreen / 1.8f))
+    val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / refreshViewCurrentHeight))
+    airplaneOffsetX.animateTo(min(newAirplaneX, widthScreen / 2.5f))
   }
   coroutineScope.launch {
-    val newAirplaneY = airplaneYPixels.times(abs(newY / heightOfRefreshView))
+    val newAirplaneY = airplaneYPixels.times(abs(refreshViewCurrentHeight / heightOfRefreshView))
     airplaneOffsetY.animateTo(min(newAirplaneY, airplaneYPixels))
   }
 }
@@ -158,15 +164,43 @@ private suspend fun upDownAirplaneMove(
   heightOfRefreshView: Float,
   airplaneOffsetX: Animatable<Float, AnimationVector1D>,
   widthScreen: Float,
-  coroutineScope: CoroutineScope
+  coroutineScope: CoroutineScope,
+  sideCloudScale: Animatable<Float, AnimationVector1D>,
+  centerCloudScale: Animatable<Float, AnimationVector1D>
 ) {
   var first = true
   val currentOffset = airplaneOffsetY.value
-  repeat(20) {
-    airplaneOffsetY.animateTo(
-      if (first) (currentOffset - airplaneVerticalOffset) else (currentOffset + airplaneVerticalOffset),
-      tween(450, easing = FastOutLinearInEasing)
-    )
+  val sideCloudCurrentScale = sideCloudScale.value
+  val centerCloudCurrentScale = centerCloudScale.value
+  repeat(10) {
+    val cloudScaleOffset = 0.3f
+    val sideCloudJob = coroutineScope.launch {
+      sideCloudScale.animateTo(
+        if (first) (sideCloudCurrentScale.minus(cloudScaleOffset))
+        else (centerCloudCurrentScale.plus(
+          cloudScaleOffset
+        )),
+        tween(390, easing = FastOutLinearInEasing)
+      )
+    }
+    val centerCloudJob = coroutineScope.launch {
+      centerCloudScale.animateTo(
+        if (first) (sideCloudCurrentScale.minus(cloudScaleOffset))
+        else (centerCloudCurrentScale.plus(
+          cloudScaleOffset
+        )),
+        tween(390, easing = FastOutLinearInEasing)
+      )
+    }
+    val airplaneOffsetYJob = coroutineScope.launch {
+      airplaneOffsetY.animateTo(
+        if (first) (currentOffset.minus(airplaneVerticalOffset)) else (currentOffset.plus(
+          airplaneVerticalOffset
+        )),
+        tween(390, easing = FastOutLinearInEasing)
+      )
+    }
+    joinAll(airplaneOffsetYJob, sideCloudJob, centerCloudJob)
     first = !first
   }
   val airplaneXJob = coroutineScope.launch {
@@ -202,6 +236,8 @@ private fun CloudList(
         )
       }
       .pointerInput(canAcceptTouch) {
+        if (!canAcceptTouch) return@pointerInput
+
         detectVerticalDragGestures(
           onDragStart = {},
           onDragCancel = {},
@@ -252,14 +288,14 @@ fun RandomCard(color: Color) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(220.dp)
+      .height(200.dp)
       .background(color)
   ) {
     Icon(
       imageVector = Icons.Filled.ShoppingCart,
       contentDescription = null,
       modifier = Modifier
-        .size(220.dp)
+        .size(200.dp)
         .align(Alignment.Center), tint = Color.White
     )
   }
@@ -281,7 +317,7 @@ private fun CloudPlaneComposable(
   Box(
     Modifier
       .fillMaxWidth()
-      .height(220.dp)
+      .height(200.dp)
       .background(if (isSystemInDarkTheme()) Color.Black else Color(0xff1fb4ff))
   ) {
     Image(
