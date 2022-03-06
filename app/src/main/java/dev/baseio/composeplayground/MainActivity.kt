@@ -14,6 +14,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import dev.baseio.composeplayground.ui.animations.ChatMessageReactions
+import dev.baseio.composeplayground.ui.animations.LikeAnimation
 import dev.baseio.composeplayground.ui.animations.MenuToClose
 import dev.baseio.composeplayground.ui.animations.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme
@@ -33,14 +34,19 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                   .weight(1f)
                   .fillMaxWidth(),
-                count = 3, state = pagerState,
+                count = 4, state = pagerState,
               ) { page ->
                 // Our page content
                 when (page) {
-                  0 -> {
+                  1 -> {
                     PullToRefreshOne()
                   }
-                  1 -> {
+                  0 -> {
+                    Box(Modifier.fillMaxSize()) {
+                      LikeAnimation(Modifier.align(Alignment.Center))
+                    }
+                  }
+                  2 -> {
                     Box(Modifier.fillMaxSize()) {
                       ChatMessageReactions(Modifier.align(Alignment.Center))
                     }
