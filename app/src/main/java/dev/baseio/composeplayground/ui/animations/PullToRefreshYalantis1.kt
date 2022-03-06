@@ -72,6 +72,9 @@ fun PullToRefreshOne() {
     Animatable(airplaneYPixels)
   }
 
+  val dividerHeight = remember {
+    Animatable(heightOfRefreshView * 0.8f)
+  }
   val airplaneVerticalOffset = with(LocalDensity.current) {
     4.dp.toPx()
   }
@@ -86,19 +89,20 @@ fun PullToRefreshOne() {
       airplaneOffsetY,
       sideCloudScale,
       centerCloudScale,
+      dividerHeight,
       heightOfRefreshView,
       coroutineScope,
-      { newY ->
+      { refreshViewCurrentHeight ->
         onRefreshViewTranslated(
           coroutineScope,
           heightOfRefreshView,
-          newY,
+          refreshViewCurrentHeight,
           sideCloudScale,
           centerCloudScale,
           airplaneXPixels,
           airplaneOffsetX,
           airplaneYPixels,
-          airplaneOffsetY, widthScreen
+          airplaneOffsetY, widthScreen, dividerHeight
         )
       }, {
         canAcceptTouch.value = false
@@ -110,7 +114,7 @@ fun PullToRefreshOne() {
           heightOfRefreshView,
           airplaneOffsetX,
           widthScreen,
-          coroutineScope
+          coroutineScope,
         )
 
         canAcceptTouch.value = true
@@ -130,7 +134,8 @@ private fun onRefreshViewTranslated(
   airplaneOffsetX: Animatable<Float, AnimationVector1D>,
   airplaneYPixels: Float,
   airplaneOffsetY: Animatable<Float, AnimationVector1D>,
-  widthScreen: Float
+  widthScreen: Float,
+  dividerHeight: Animatable<Float, AnimationVector1D>
 ) {
   coroutineScope.launch {
     val newScale = abs(heightOfRefreshView / refreshViewCurrentHeight)
@@ -146,7 +151,10 @@ private fun onRefreshViewTranslated(
   }
   coroutineScope.launch {
     val newAirplaneY = airplaneYPixels.times(abs(refreshViewCurrentHeight / heightOfRefreshView))
-    airplaneOffsetY.animateTo(max(newAirplaneY, heightOfRefreshView/2))
+    airplaneOffsetY.animateTo(max(newAirplaneY, heightOfRefreshView / 2))
+  }
+  coroutineScope.launch {
+    dividerHeight.animateTo(refreshViewCurrentHeight * 0.8f)
   }
 }
 
@@ -186,8 +194,9 @@ private fun CloudList(
   animateOffset: Animatable<Float, AnimationVector1D>,
   airplaneOffsetX: Animatable<Float, AnimationVector1D>,
   airplaneOffsetY: Animatable<Float, AnimationVector1D>,
-  cloudsZoom: Animatable<Float, AnimationVector1D>,
+  sideCloudScale: Animatable<Float, AnimationVector1D>,
   centerCloudScale: Animatable<Float, AnimationVector1D>,
+  dividerHeight: Animatable<Float, AnimationVector1D>,
   heightOfRefreshView: Float,
   coroutineScope: CoroutineScope,
   onUpdate: (Float) -> Unit,
@@ -237,8 +246,9 @@ private fun CloudList(
     CloudPlaneComposable(
       airplaneOffsetX.value,
       airplaneOffsetY.value,
-      cloudsZoom.value,
-      centerCloudScale.value
+      sideCloudScale.value,
+      centerCloudScale.value,
+      dividerHeight = dividerHeight.value
     )
 
     RandomCard(yellow)
@@ -262,7 +272,7 @@ fun RandomCard(color: Color) {
       imageVector = Icons.Filled.ShoppingCart,
       contentDescription = null,
       modifier = Modifier
-        .size(200.dp)
+        .size(100.dp)
         .align(Alignment.Center), tint = Color.White
     )
   }
@@ -280,6 +290,7 @@ private fun CloudPlaneComposable(
   airplaneOffsetY: Float,
   cloudsZoom: Float,
   centerCloud: Float,
+  dividerHeight: Float
 ) {
   Box(
     Modifier
@@ -301,37 +312,41 @@ private fun CloudPlaneComposable(
 
     CloudsBottom(cloudsZoom, centerCloud)
 
-    ArrowsExpanding()
+    ArrowsExpanding(dividerHeight)
   }
 }
 
 @Composable
-private fun BoxScope.ArrowsExpanding() {
+private fun BoxScope.ArrowsExpanding(dividerHeight: Float) {
+  val dividerHeightDp = with(LocalDensity.current) {
+    dividerHeight.toDp()
+  }
   Box(
     Modifier.Companion
       .align(Alignment.Center)
       .fillMaxWidth()
   ) {
-
     Row(
       Modifier
         .height(IntrinsicSize.Max)
         .fillMaxWidth(),
       horizontalArrangement = Arrangement.SpaceAround
     ) {
+      Spacer(Modifier.padding())
       Divider(
         color = yellow,
         modifier = Modifier
-          .fillMaxHeight()
-          .width(1.dp)
+          .height(dividerHeightDp)
+          .width(4.dp)
       )
-
+      Spacer(Modifier.padding())
       Divider(
         color = yellow,
         modifier = Modifier
-          .fillMaxHeight()
-          .width(1.dp)
+          .height(dividerHeightDp)
+          .width(4.dp)
       )
+      Spacer(Modifier.padding())
     }
 
 
@@ -348,7 +363,6 @@ private fun BoxScope.CloudsBottom(
       .align(Alignment.BottomCenter)
       .fillMaxWidth()
   ) {
-
     Image(
       painter = painterResource(id = R.drawable.clouds_left),
       contentDescription = null,
@@ -356,7 +370,6 @@ private fun BoxScope.CloudsBottom(
         .scale(cloudsZoom)
         .align(Alignment.BottomStart)
     )
-
     Image(
       painter = painterResource(id = R.drawable.clouds_left),
       contentDescription = null,
@@ -364,8 +377,6 @@ private fun BoxScope.CloudsBottom(
         .scale(centerCloud)
         .align(Alignment.BottomEnd)
     )
-
-
     Image(
       painter = painterResource(id = R.drawable.clouds_center),
       contentDescription = null,
@@ -373,7 +384,5 @@ private fun BoxScope.CloudsBottom(
         .scale(cloudsZoom)
         .align(Alignment.BottomCenter)
     )
-
-
   }
 }
