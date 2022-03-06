@@ -28,11 +28,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import dev.baseio.composeplayground.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 
 
 /**
@@ -50,7 +51,7 @@ fun PullToRefreshOne() {
     Animatable(1f)
   }
 
-  val height = with(LocalDensity.current) {
+  val heightOfRefreshView = with(LocalDensity.current) {
     200.dp.toPx()
   }
 
@@ -58,7 +59,7 @@ fun PullToRefreshOne() {
     (LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.3f)
   }
 
-  val airplaneYPixels = (height * 0.8f)
+  val airplaneYPixels = (heightOfRefreshView * 1.2f)
 
   val airplaneOffsetX = remember {
     Animatable(airplaneXPixels)
@@ -68,37 +69,47 @@ fun PullToRefreshOne() {
   }
 
   LaunchedEffect(true) {
-    animateOffset.animateTo(height, animationSpec = tween(500))
+    animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
   }
 
   Box(
     Modifier
       .fillMaxSize()
   ) {
-    CloudList(animateOffset, height, coroutineScope) { newY ->
+    CloudList(
+      animateOffset,
+      airplaneOffsetX,
+      airplaneOffsetY,
+      cloudsZoom,
+      heightOfRefreshView,
+      coroutineScope
+    ) { newY ->
       coroutineScope.launch {
-        val newScale = height / newY
-        cloudsZoom.animateTo(max(1f, newScale))
+        val newScale = abs(heightOfRefreshView / newY)
+        Log.e("new scale",newScale.toString())
+        cloudsZoom.animateTo(max(1f, min(2f, newScale)))
       }
       coroutineScope.launch {
-        val newAirplaneX = airplaneXPixels.times(height / newY)
+        val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
         Log.e(this.javaClass.simpleName, newAirplaneX.toString())
         airplaneOffsetX.animateTo(newAirplaneX)
       }
       coroutineScope.launch {
-        val newAirplaneY = airplaneYPixels.times(newY / height)
+        val newAirplaneY = airplaneYPixels.times(abs(newY / heightOfRefreshView))
         Log.e(this.javaClass.simpleName, newAirplaneY.toString())
-        airplaneOffsetY.animateTo(newAirplaneY)
+        airplaneOffsetY.animateTo(min(newAirplaneY, airplaneYPixels))
       }
     }
-    CloudPlaneComposable(airplaneOffsetX.value, airplaneOffsetY.value, cloudsZoom.value)
   }
 }
 
 @Composable
 private fun CloudList(
   animateOffset: Animatable<Float, AnimationVector1D>,
-  height: Float,
+  airplaneOffsetX: Animatable<Float, AnimationVector1D>,
+  airplaneOffsetY: Animatable<Float, AnimationVector1D>,
+  cloudsZoom: Animatable<Float, AnimationVector1D>,
+  heightOfRefreshView: Float,
   coroutineScope: CoroutineScope,
   onUpdate: (Float) -> Unit
 ) {
@@ -119,14 +130,17 @@ private fun CloudList(
           },
           onVerticalDrag = { change, dragAmount ->
             val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount)
-            val newDragValueMain = Offset(x = 0f, y = summedMain.y.coerceIn(0f, height))
+            val newDragValueMain =
+              Offset(x = 0f, y = min(0f, max(-heightOfRefreshView, summedMain.y)))
             change.consumePositionChange()
+            onUpdate(newDragValueMain.y)
             coroutineScope.launch {
-              onUpdate(newDragValueMain.y)
               animateOffset.animateTo(newDragValueMain.y, animationSpec = tween(50))
             }
           })
       }) {
+
+    CloudPlaneComposable(airplaneOffsetX.value, airplaneOffsetY.value, cloudsZoom.value)
 
     RandomCard(yellow)
 
@@ -166,7 +180,7 @@ val green = Color(0xff079c6d)
 val red = Color(0xffe35050)
 
 @Composable
-private fun BoxScope.CloudPlaneComposable(
+private fun CloudPlaneComposable(
   airplaneOffsetX: Float,
   airplaneOffsetY: Float,
   cloudsZoom: Float
@@ -174,7 +188,6 @@ private fun BoxScope.CloudPlaneComposable(
   Box(
     Modifier
       .fillMaxWidth()
-      .align(Alignment.TopCenter)
       .height(200.dp)
       .background(if (isSystemInDarkTheme()) Color.Black else Color(0xff1fb4ff))
   ) {
