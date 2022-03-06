@@ -56,7 +56,7 @@ fun PullToRefreshOne() {
   }
 
   val heightOfRefreshView = with(LocalDensity.current) {
-    120.dp.toPx()
+    180.dp.toPx()
   }
 
   val airplaneXPixels = with(LocalDensity.current) {
@@ -173,14 +173,14 @@ fun RandomCard(color: Color) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(120.dp)
+      .height(180.dp)
       .background(color)
   ) {
     Icon(
       imageVector = Icons.Filled.ShoppingCart,
       contentDescription = null,
       modifier = Modifier
-        .size(120.dp)
+        .size(180.dp)
         .align(Alignment.Center), tint = Color.White
     )
   }
@@ -202,7 +202,7 @@ private fun CloudPlaneComposable(
   Box(
     Modifier
       .fillMaxWidth()
-      .height(120.dp)
+      .height(180.dp)
       .background(if (isSystemInDarkTheme()) Color.Black else Color(0xff1fb4ff))
   ) {
     Image(
