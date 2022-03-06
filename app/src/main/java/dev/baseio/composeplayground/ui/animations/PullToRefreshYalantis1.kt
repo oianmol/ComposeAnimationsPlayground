@@ -1,21 +1,16 @@
 package dev.baseio.composeplayground.ui.animations
 
-import android.util.Log
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -56,7 +51,7 @@ fun PullToRefreshOne() {
   }
 
   val heightOfRefreshView = with(LocalDensity.current) {
-    180.dp.toPx()
+    220.dp.toPx()
   }
 
   val airplaneXPixels = with(LocalDensity.current) {
@@ -76,6 +71,14 @@ fun PullToRefreshOne() {
     animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
   }
 
+  val airplaneVerticalOffset = with(LocalDensity.current) {
+    2.dp.toPx()
+  }
+
+  val canAcceptTouch = remember {
+    mutableStateOf(true)
+  }
+
   Box(
     Modifier
       .fillMaxSize()
@@ -87,26 +90,79 @@ fun PullToRefreshOne() {
       sideCloudScale,
       centerCloudScale,
       heightOfRefreshView,
-      coroutineScope
-    ) { newY ->
-      coroutineScope.launch {
-        val newScale = abs(heightOfRefreshView / newY)
-        sideCloudScale.animateTo(max(1f, min(1.55f, newScale)))
-      }
-      coroutineScope.launch {
-        val newScale = abs(heightOfRefreshView / newY)
-        centerCloudScale.animateTo(max(1f, min(1.30f, newScale)))
-      }
-      coroutineScope.launch {
-        val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
-        airplaneOffsetX.animateTo(newAirplaneX)
-      }
-      coroutineScope.launch {
-        val newAirplaneY = airplaneYPixels.times(abs(newY / heightOfRefreshView))
-        airplaneOffsetY.animateTo(min(newAirplaneY, airplaneYPixels))
-      }
-    }
+      coroutineScope,
+      { newY ->
+        onRefreshViewTranslated(
+          coroutineScope,
+          heightOfRefreshView,
+          newY,
+          sideCloudScale,
+          centerCloudScale,
+          airplaneXPixels,
+          airplaneOffsetX,
+          airplaneYPixels,
+          airplaneOffsetY
+        )
+      }, {
+        upDownAirplaneMove(
+          airplaneOffsetY,
+          airplaneVerticalOffset,
+          animateOffset,
+          heightOfRefreshView
+        )
+      },
+      { value ->
+        canAcceptTouch.value = value
+      }, canAcceptTouch.value
+    )
   }
+}
+
+private fun onRefreshViewTranslated(
+  coroutineScope: CoroutineScope,
+  heightOfRefreshView: Float,
+  newY: Float,
+  sideCloudScale: Animatable<Float, AnimationVector1D>,
+  centerCloudScale: Animatable<Float, AnimationVector1D>,
+  airplaneXPixels: Float,
+  airplaneOffsetX: Animatable<Float, AnimationVector1D>,
+  airplaneYPixels: Float,
+  airplaneOffsetY: Animatable<Float, AnimationVector1D>
+) {
+  coroutineScope.launch {
+    val newScale = abs(heightOfRefreshView / newY)
+    sideCloudScale.animateTo(max(1f, min(1.55f, newScale)))
+  }
+  coroutineScope.launch {
+    val newScale = abs(heightOfRefreshView / newY)
+    centerCloudScale.animateTo(max(1f, min(1.30f, newScale)))
+  }
+  coroutineScope.launch {
+    val newAirplaneX = airplaneXPixels.times(abs(heightOfRefreshView / newY))
+    airplaneOffsetX.animateTo(newAirplaneX)
+  }
+  coroutineScope.launch {
+    val newAirplaneY = airplaneYPixels.times(abs(newY / heightOfRefreshView))
+    airplaneOffsetY.animateTo(min(newAirplaneY, airplaneYPixels))
+  }
+}
+
+private suspend fun upDownAirplaneMove(
+  airplaneOffsetY: Animatable<Float, AnimationVector1D>,
+  airplaneVerticalOffset: Float,
+  animateOffset: Animatable<Float, AnimationVector1D>,
+  heightOfRefreshView: Float
+) {
+  var first = true
+  val currentOffset = airplaneOffsetY.value
+  repeat(20) {
+    airplaneOffsetY.animateTo(
+      if (first) (currentOffset - airplaneVerticalOffset) else (currentOffset + airplaneVerticalOffset),
+      tween(450, easing = FastOutLinearInEasing)
+    )
+    first = !first
+  }
+  animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
 }
 
 @Composable
@@ -118,8 +174,13 @@ private fun CloudList(
   centerCloudScale: Animatable<Float, AnimationVector1D>,
   heightOfRefreshView: Float,
   coroutineScope: CoroutineScope,
-  onUpdate: (Float) -> Unit
+  onUpdate: (Float) -> Unit,
+  loadData: suspend () -> Unit,
+  canAcceptTouchInvoker: (Boolean) -> Unit,
+  canAcceptTouch: Boolean,
 ) {
+
+
   Column(
     Modifier
       .offset {
@@ -133,26 +194,38 @@ private fun CloudList(
           onDragStart = {},
           onDragCancel = {},
           onDragEnd = {
-            Log.e("animateOffset.value",animateOffset.value.toString())
-            if (animateOffset.value > -heightOfRefreshView / 2) {
-              coroutineScope.launch {
-                animateOffset.animateTo(-heightOfRefreshView, animationSpec = tween(500))
-              }
-            }
+
           },
           onVerticalDrag = { change, dragAmount ->
-            val summedMain = Offset(x = 0f, y = animateOffset.targetValue + dragAmount.times(RESISTANCE_SCROLL))
+            if (!canAcceptTouch) {
+              return@detectVerticalDragGestures
+            }
+            val summedMain =
+              Offset(x = 0f, y = animateOffset.targetValue + dragAmount.times(RESISTANCE_SCROLL))
             val newDragValueMain =
               Offset(x = 0f, y = min(0f, max(-heightOfRefreshView, summedMain.y)))
             change.consumePositionChange()
-            onUpdate(newDragValueMain.y)
-            coroutineScope.launch {
-              animateOffset.animateTo(newDragValueMain.y, animationSpec = tween(50))
+            if (newDragValueMain.y >= (-heightOfRefreshView / 2.2)) {
+              coroutineScope.launch {
+                canAcceptTouchInvoker.invoke(false)
+                loadData()
+              }
+            } else {
+              onUpdate(newDragValueMain.y)
+              coroutineScope.launch {
+                animateOffset.animateTo(newDragValueMain.y, animationSpec = tween(50))
+              }
             }
+
           })
       }) {
 
-    CloudPlaneComposable(airplaneOffsetX.value, airplaneOffsetY.value, cloudsZoom.value,centerCloudScale.value)
+    CloudPlaneComposable(
+      airplaneOffsetX.value,
+      airplaneOffsetY.value,
+      cloudsZoom.value,
+      centerCloudScale.value
+    )
 
     RandomCard(yellow)
 
@@ -160,11 +233,6 @@ private fun CloudList(
 
     RandomCard(red)
 
-    RandomCard(yellow)
-
-    RandomCard(green)
-
-    RandomCard(red)
   }
 }
 
@@ -173,14 +241,14 @@ fun RandomCard(color: Color) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(180.dp)
+      .height(220.dp)
       .background(color)
   ) {
     Icon(
       imageVector = Icons.Filled.ShoppingCart,
       contentDescription = null,
       modifier = Modifier
-        .size(180.dp)
+        .size(220.dp)
         .align(Alignment.Center), tint = Color.White
     )
   }
@@ -197,22 +265,27 @@ private fun CloudPlaneComposable(
   airplaneOffsetX: Float,
   airplaneOffsetY: Float,
   cloudsZoom: Float,
-  centerCloud: Float
+  centerCloud: Float,
 ) {
   Box(
     Modifier
       .fillMaxWidth()
-      .height(180.dp)
+      .height(220.dp)
       .background(if (isSystemInDarkTheme()) Color.Black else Color(0xff1fb4ff))
   ) {
     Image(
       painter = painterResource(id = R.drawable.airplane),
       contentDescription = null,
       Modifier
-        .offset { IntOffset(airplaneOffsetX.toInt(), airplaneOffsetY.toInt()) }
+        .offset {
+          IntOffset(
+            airplaneOffsetX.toInt(),
+            airplaneOffsetY.toInt()
+          )
+        }
     )
 
-    CloudsBottom(cloudsZoom,centerCloud)
+    CloudsBottom(cloudsZoom, centerCloud)
 
     ArrowsExpanding()
   }
@@ -222,11 +295,30 @@ private fun CloudPlaneComposable(
 private fun BoxScope.ArrowsExpanding() {
   Box(
     Modifier.Companion
-      .align(Alignment.BottomCenter)
+      .align(Alignment.Center)
       .fillMaxWidth()
   ) {
 
+    Row(
+      Modifier
+        .height(IntrinsicSize.Max)
+        .fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceAround
+    ) {
+      Divider(
+        color = yellow,
+        modifier = Modifier
+          .fillMaxHeight()
+          .width(1.dp)
+      )
 
+      Divider(
+        color = yellow,
+        modifier = Modifier
+          .fillMaxHeight()
+          .width(1.dp)
+      )
+    }
 
 
   }
