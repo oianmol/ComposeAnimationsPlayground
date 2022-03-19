@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.animations
+package dev.baseio.composeplayground.ui.animations.pulltorefresh
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -7,6 +7,8 @@ import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.*
@@ -23,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.R
+import dev.baseio.composeplayground.contributors.AnmolVerma
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -80,7 +83,7 @@ fun PullToRefreshOne() {
 
   Box(
     Modifier
-      .fillMaxSize()
+      .fillMaxSize().background(MaterialTheme.colors.background)
   ) {
     CloudList(
       animateOffset,
@@ -250,6 +253,15 @@ private fun CloudList(
       dividerHeight = dividerHeight.value
     )
 
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp)
+        .background(MaterialTheme.colors.background)
+    ) {
+      AnmolVerma(Modifier.align(Alignment.Center))
+    }
+
     RandomCard(yellow)
 
     RandomCard(green)
@@ -267,13 +279,19 @@ fun RandomCard(color: Color) {
       .height(200.dp)
       .background(color)
   ) {
-    Icon(
-      imageVector = Icons.Filled.ShoppingCart,
-      contentDescription = null,
-      modifier = Modifier
-        .size(100.dp)
-        .align(Alignment.Center), tint = Color.White
-    )
+    Column(
+      Modifier.align(Alignment.Center),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center
+    ) {
+      Icon(
+        imageVector = Icons.Filled.ShoppingCart,
+        contentDescription = null,
+        modifier = Modifier
+          .size(100.dp), tint = Color.White
+      )
+      Text(text = "Pull down to refresh")
+    }
   }
 }
 

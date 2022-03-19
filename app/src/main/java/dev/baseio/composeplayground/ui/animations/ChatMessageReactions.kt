@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import dev.baseio.composeplayground.contributors.AnmolVerma
 import dev.baseio.composeplayground.ui.theme.Typography
 
 /**
@@ -31,7 +32,7 @@ fun ChatMessageReactions(modifier: Modifier) {
   }
   Surface(
     modifier
-      .background(MaterialTheme.colors.onBackground)
+      .background(MaterialTheme.colors.background)
   ) {
 
     val scaleEffect by animateFloatAsState(
@@ -135,6 +136,14 @@ fun ChatMessageReactions(modifier: Modifier) {
             style = Typography.h4
           )
         }
+      }
+
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(200.dp).background(MaterialTheme.colors.background)
+      ) {
+        AnmolVerma(Modifier.align(Alignment.Center))
       }
     }
   }

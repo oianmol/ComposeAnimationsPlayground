@@ -17,6 +17,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.R
+import dev.baseio.composeplayground.contributors.AnmolVerma
+import dev.baseio.composeplayground.ui.animations.pulltorefresh.green
+import dev.baseio.composeplayground.ui.animations.pulltorefresh.yellow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -153,6 +156,14 @@ fun LikeAnimation(modifier: Modifier) {
               .rotate(imageRotation.value)
           )
         }
+      }
+
+      Box(
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(200.dp)
+      ) {
+        AnmolVerma(Modifier.align(Alignment.Center))
       }
     }
   }

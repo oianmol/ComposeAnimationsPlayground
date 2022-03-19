@@ -1,8 +1,8 @@
-package dev.baseio.composeplayground.particlesystem
+package dev.baseio.composeplayground.ui.animations.pulltorefresh.particlesystem
 
 import android.graphics.PointF
-import androidx.core.util.toRange
 import kotlinx.coroutines.delay
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.random.Random
 
 class StarParticleSystem(
@@ -12,7 +12,6 @@ class StarParticleSystem(
   ParticleSystem() {
 
   private val random = Random(particleCount)
-  private val randomAlpha = Random
 
   val particles by lazy {
     prepare()
@@ -20,9 +19,9 @@ class StarParticleSystem(
 
   override suspend fun update() {
     particles.forEach {
-      delay(800)
-      it.scale = randomAlpha.nextDouble(1.0, 5.0).toFloat()
-      it.alpha = randomAlpha.nextDouble(0.0, 1.0).toFloat()
+      delay(50)
+      it.scale = Random.nextDouble(1.0, 3.0).toFloat()
+      it.alpha = Random.nextDouble(0.0, 1.0).toFloat()
     }
   }
 
@@ -31,7 +30,11 @@ class StarParticleSystem(
     repeat(particleCount) {
       val position = getRandomVect(0f, 0f, viewPortWidth, viewPortHeight, random)
       val particle =
-        Particle(alpha = 1f, pos = PointF(position[0], position[1]), scale = 1f)
+        Particle(
+          alpha = 1f,
+          pos = PointF(position[0], position[1]),
+          scale = Random.nextDouble(1.0, 3.0).toFloat()
+        )
       particles.add(particle)
     }
     return particles

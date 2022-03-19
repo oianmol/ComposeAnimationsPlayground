@@ -10,10 +10,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import dev.baseio.composeplayground.contributors.AnmolVerma
 
 
 /**
@@ -43,57 +45,69 @@ fun MenuToClose(modifier: Modifier) {
       animationSpec = springSpec(),
     )
 
-    Column(
-      Modifier
-        .padding(32.dp)
-        .height(if(isHidden) 40.dp else 50.dp)
-        .clickable {
-          isRotated = !isRotated
-          isHidden = !isHidden
-        }, verticalArrangement = if (isHidden) Arrangement.SpaceAround else Arrangement.SpaceBetween
-    ) {
-
-      Box(
+    Column() {
+      Column(
         Modifier
-          .graphicsLayer(
-            shape = RoundedCornerShape(8.dp),
-            rotationZ = rotateFirst,
-            transformOrigin = TransformOrigin(0.3f, 0.3f)
-          )
-          .width(64.dp)
-          .background(MaterialTheme.colors.onBackground)
-          .height(10.dp)
+          .align(Alignment.CenterHorizontally)
+          .padding(32.dp)
+          .height(if(isHidden) 40.dp else 50.dp)
+          .clickable {
+            isRotated = !isRotated
+            isHidden = !isHidden
+          }, verticalArrangement = if (isHidden) Arrangement.SpaceAround else Arrangement.SpaceBetween
+      ) {
 
-      )
-
-      if (!isHidden) {
         Box(
           Modifier
             .graphicsLayer(
               shape = RoundedCornerShape(8.dp),
-              scaleX = hiddenFirst, scaleY = hiddenFirst, alpha = hiddenFirst
+              rotationZ = rotateFirst,
+              transformOrigin = TransformOrigin(0.3f, 0.3f)
+            )
+            .width(64.dp)
+            .background(MaterialTheme.colors.onBackground)
+            .height(10.dp)
+
+        )
+
+        if (!isHidden) {
+          Box(
+            Modifier
+              .graphicsLayer(
+                shape = RoundedCornerShape(8.dp),
+                scaleX = hiddenFirst, scaleY = hiddenFirst, alpha = hiddenFirst
+              )
+              .width(64.dp)
+              .height(10.dp)
+              .background(MaterialTheme.colors.onBackground)
+
+          )
+        }
+
+
+        Box(
+          Modifier
+            .graphicsLayer(
+              shape = RoundedCornerShape(8.dp),
+              rotationZ = rotateSecond,
+              transformOrigin = TransformOrigin(0.3f, 0.3f)
             )
             .width(64.dp)
             .height(10.dp)
             .background(MaterialTheme.colors.onBackground)
 
         )
+
+
       }
 
-
       Box(
-        Modifier
-          .graphicsLayer(
-            shape = RoundedCornerShape(8.dp),
-            rotationZ = rotateSecond,
-            transformOrigin = TransformOrigin(0.3f, 0.3f)
-          )
-          .width(64.dp)
-          .height(10.dp)
-          .background(MaterialTheme.colors.onBackground)
-
-      )
-
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(200.dp).background(MaterialTheme.colors.background)
+      ) {
+        AnmolVerma(Modifier.align(Alignment.Center))
+      }
     }
   }
 }

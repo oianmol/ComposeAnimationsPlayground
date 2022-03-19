@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.particlesystem
+package dev.baseio.composeplayground.ui.animations.pulltorefresh.particlesystem
 
 import android.graphics.PointF
 import kotlin.random.Random
