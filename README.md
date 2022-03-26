@@ -58,4 +58,8 @@ Android Dev MadSkills - Anmol Verma
 
 https://user-images.githubusercontent.com/32521663/159110243-b18ff462-febc-48b4-a00e-d77d63a9dc2c.mp4
 
+Netflix Animation - Anmol Verma
+
+https://user-images.githubusercontent.com/4393101/160244845-c0f0b5fa-e069-4249-b8bb-a643628529af.mp4
+
 
