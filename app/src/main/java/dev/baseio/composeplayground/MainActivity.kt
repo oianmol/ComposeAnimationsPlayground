@@ -22,6 +22,7 @@ import com.google.accompanist.pager.rememberPagerState
 import dev.baseio.composeplayground.ui.animations.*
 import dev.baseio.composeplayground.ui.animations.anmolverma.BellAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
+import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
     ) {
       HorizontalPager(
         modifier = Modifier.fillMaxSize(),
-        count = 15, state = pagerState,
+        count = 16, state = pagerState,
       ) { page ->
         // Our page content
         when (page) {
@@ -113,10 +114,13 @@ class MainActivity : ComponentActivity() {
               PlanetarySystem(Modifier.align(Alignment.Center))
             }
           }
-          1 -> {
+          15 -> {
             Box(Modifier.fillMaxSize()) {
               LikeAnimation(Modifier.align(Alignment.Center))
             }
+          }
+          1 -> {
+            SlackAnimation()
           }
           2 -> {
             Box(Modifier.fillMaxSize()) {
