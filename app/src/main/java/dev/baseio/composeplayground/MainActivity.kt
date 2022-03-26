@@ -24,6 +24,7 @@ import dev.baseio.composeplayground.ui.animations.anmolverma.BellAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
+import dev.baseio.composeplayground.ui.animations.anmolverma.pulltomakesoup.PullToMakeSoupYalantis
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme
 
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
     ) {
       HorizontalPager(
         modifier = Modifier.fillMaxSize(),
-        count = 16, state = pagerState,
+        count = 17, state = pagerState,
       ) { page ->
         // Our page content
         when (page) {
@@ -96,7 +97,15 @@ class MainActivity : ComponentActivity() {
           14 -> {
             ShootingStarsAnimation()
           }
-          0 -> {
+          15 -> {
+            Box(Modifier.fillMaxSize()) {
+              LikeAnimation(Modifier.align(Alignment.Center))
+            }
+          }
+          0->{
+            PullToMakeSoupYalantis()
+          }
+          16 -> {
             NetflixIntroAnimation()
           }
           11 -> {
@@ -114,11 +123,7 @@ class MainActivity : ComponentActivity() {
               PlanetarySystem(Modifier.align(Alignment.Center))
             }
           }
-          15 -> {
-            Box(Modifier.fillMaxSize()) {
-              LikeAnimation(Modifier.align(Alignment.Center))
-            }
-          }
+
           1 -> {
             SlackAnimation()
           }
