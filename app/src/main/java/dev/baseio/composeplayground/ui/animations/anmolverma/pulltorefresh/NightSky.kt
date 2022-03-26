@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.animations.pulltorefresh
+package dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh
 
 import android.graphics.PointF
 import androidx.compose.animation.core.*
@@ -15,9 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import dev.baseio.composeplayground.ui.animations.pulltorefresh.particlesystem.StarParticleSystem
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.particlesystem.StarParticleSystem
 import kotlinx.coroutines.launch
 
 @Composable

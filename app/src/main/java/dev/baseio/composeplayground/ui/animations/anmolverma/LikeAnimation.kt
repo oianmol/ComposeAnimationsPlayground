@@ -18,8 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.R
 import dev.baseio.composeplayground.contributors.AnmolVerma
-import dev.baseio.composeplayground.ui.animations.pulltorefresh.green
-import dev.baseio.composeplayground.ui.animations.pulltorefresh.yellow
+import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.green
+import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.yellow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

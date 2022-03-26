@@ -1,8 +1,7 @@
-package dev.baseio.composeplayground.ui.animations.pulltorefresh.particlesystem
+package dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.particlesystem
 
 import android.graphics.PointF
 import kotlinx.coroutines.delay
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.random.Random
 
 class StarParticleSystem(

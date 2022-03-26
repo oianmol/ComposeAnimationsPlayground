@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.animations.planetarysystem
+package dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color

@@ -60,7 +60,7 @@ fun ChatMessageReactions(modifier: Modifier) {
 
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally){
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Button(onClick = {
         isShowReaction = !isShowReaction
       }) {
@@ -141,7 +141,8 @@ fun ChatMessageReactions(modifier: Modifier) {
       Box(
         modifier = Modifier
           .fillMaxWidth()
-          .height(200.dp).background(MaterialTheme.colors.background)
+          .height(200.dp)
+          .background(MaterialTheme.colors.background)
       ) {
         AnmolVerma(Modifier.align(Alignment.Center))
       }
@@ -150,13 +151,13 @@ fun ChatMessageReactions(modifier: Modifier) {
 }
 
 @Composable
-private fun bottom() = TransformOrigin(0.5f, 1f)
+fun bottom() = TransformOrigin(0.5f, 1f)
 
 @Composable
-private fun bottomTrailing() = TransformOrigin(1f, 1f)
+fun bottomTrailing() = TransformOrigin(1f, 1f)
 
 @Composable
-private fun bottomLeading() = TransformOrigin(0.5f, 1f)
+fun bottomLeading() = TransformOrigin(0.5f, 1f)
 
 @Composable
-private fun topTrailing() = TransformOrigin(1f, 0f)
+fun topTrailing() = TransformOrigin(1f, 0f)

@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.animations.planetarysystem
+package dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
@@ -16,8 +16,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.contributors.AnmolVerma
-import dev.baseio.composeplayground.ui.animations.pulltorefresh.NightSky
-import kotlinx.coroutines.delay
+import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.NightSky
 import kotlinx.coroutines.launch
 
 @Composable

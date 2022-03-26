@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.animations
+package dev.baseio.composeplayground.ui.animations.anmolverma
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
