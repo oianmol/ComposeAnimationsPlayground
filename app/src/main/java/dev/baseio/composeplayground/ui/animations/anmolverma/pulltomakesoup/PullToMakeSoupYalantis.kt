@@ -60,6 +60,89 @@ fun PullToMakeSoupYalantis() {
     LocalConfiguration.current.screenWidthDp.dp.toPx()
   }
 
+  val heightScreen = with(LocalDensity.current) {
+    LocalConfiguration.current.screenHeightDp.dp.toPx()
+  }
+
+  val panTopOffset = with(LocalDensity.current) { 60.dp.toPx() }
+  val coverOffset = with(LocalDensity.current) { 90.dp.toPx() }
+  val coverStartPointY = with(LocalDensity.current) { 10.dp.toPx() }
+  val coverFinalPointY = with(LocalDensity.current) { 70.dp.toPx() }
+
+  val carrotStartPointX = (widthScreen / 100) * 79
+  val carrotFinalPointX = (widthScreen / 100) * 30.0f
+
+  val carrotFinalPointY = with(LocalDensity.current) { 245.dp.toPx() }
+  val carrotStartPointY = with(LocalDensity.current) { 161.dp.toPx() }
+
+  val carrotOffset = with(LocalDensity.current) { 90.dp.toPx() }
+
+  val potatoFinalPointX = (widthScreen / 100) * -25;
+  val potatoStartPointX = (widthScreen / 100) * 14.5f;
+
+  val potatoStartPointY = with(LocalDensity.current) { 150.dp.toPx() }
+  val potatoFinalPointY = with(LocalDensity.current) { 237.dp.toPx() }
+  val potatoOffset = with(LocalDensity.current) { 90.dp.toPx() }
+
+  val rightPeaFinalPointX = (widthScreen / 100) * 30.5f;
+  val rightPeaStartPointX = (widthScreen / 100) * 88;
+
+  val rightPeaStartPointY = with(LocalDensity.current) { 150.dp.toPx() }
+  val rightPeaFinalPointY = with(LocalDensity.current) { 242.dp.toPx() }
+  val rightPeaOffset = with(LocalDensity.current) { 90.dp.toPx() }
+
+  val leftPeaStartPointX = (widthScreen / 100) * 7.5f;
+  val leftPeaFinalPointX = (widthScreen / 100) * -45;
+
+  val leftPeaStartPointY = with(LocalDensity.current) { 150.dp.toPx() }
+  val leftPeaFinalPointY = with(LocalDensity.current) { 242.dp.toPx() }
+  val leftPeaOffset = with(LocalDensity.current) { 90.dp.toPx() }
+
+  val flame1TopOffset = with(LocalDensity.current) { 161.dp.toPx() }
+  val flame1LeftOffset = (widthScreen / 100) * 42;
+
+  val flame2LeftOffset = (widthScreen / 100) * 45;
+
+  val flame3TopOffset = with(LocalDensity.current) { 132.dp.toPx() }
+  val flame3LeftOffset = (widthScreen / 100) * 48.5f;
+
+  val flame4TopOffset = with(LocalDensity.current) { 134.dp.toPx() }
+  val flame4LeftOffset = (widthScreen / 100) * 51.5f;
+
+  val flame5TopOffset = with(LocalDensity.current) { 134.dp.toPx() }
+  val flame5LeftOffset = (widthScreen / 100) * 54f;
+
+  val bubble1TopOffset = with(LocalDensity.current) { 144.dp.toPx() }
+  val bubble1LeftOffset = (widthScreen / 100) * 40;
+
+  val bubble2TopOffset = with(LocalDensity.current) { 144.dp.toPx() }
+  val bubble2LeftOffset = (widthScreen / 100) * 42;
+
+  val bubble3TopOffset = with(LocalDensity.current) { 144.dp.toPx() }
+  val bubble3LeftOffset = (widthScreen / 100) * 44;
+
+  val bubble4TopOffset = with(LocalDensity.current) { 144.dp.toPx() }
+  val bubble4LeftOffset = (widthScreen / 100) * 46;
+
+  val bubble5TopOffset = with(LocalDensity.current) { 144.dp.toPx() }
+  val bubble5LeftOffset = (widthScreen / 100) * 48;
+
+  val bubble6TopOffset = with(LocalDensity.current) { 144.dp.toPx() }
+  val bubble6LeftOffset = (widthScreen / 100) * 50;
+
+  val circlePivotX = with(LocalDensity.current) { 100.dp.toPx() }
+  val circlePivotY = with(LocalDensity.current) { 40.dp.toPx() }
+
+  val bubbleScaleOffset = with(LocalDensity.current) { 100.dp.toPx() }
+
+  val bubble1PivotX = bubble1LeftOffset - with(LocalDensity.current) { 140.dp.toPx() }
+  val bubble2PivotX = bubble2LeftOffset - with(LocalDensity.current) { 140.dp.toPx() }
+  val bubble3PivotX = bubble3LeftOffset - with(LocalDensity.current) { 140.dp.toPx() }
+  val bubble4PivotX = bubble4LeftOffset - with(LocalDensity.current) { 140.dp.toPx() }
+  val bubble5PivotX = bubble5LeftOffset - with(LocalDensity.current) { 140.dp.toPx() }
+  val bubble6PivotX = bubble6LeftOffset - with(LocalDensity.current) { 140.dp.toPx() }
+
+
 
   Column {
     TopAppBar(content = {
