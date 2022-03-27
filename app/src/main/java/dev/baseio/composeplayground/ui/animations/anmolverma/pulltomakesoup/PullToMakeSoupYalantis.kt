@@ -154,7 +154,12 @@ fun PullToMakeSoupYalantis() {
         .background(Color.White)
     ) {
 
-      KitchenComposable(circleAlpha.value, Modifier.align(Alignment.TopCenter))
+      KitchenComposable(
+        circleModifier = Modifier
+          .alpha(circleAlpha.value)
+          .offset { IntOffset(circlePivotX.toInt(), circlePivotY.toInt()) },
+        panModifier = Modifier.align(Alignment.TopCenter)
+      )
 
       FoodOptionsList(
         animateOffset,
@@ -163,8 +168,13 @@ fun PullToMakeSoupYalantis() {
         canAcceptTouch.value,
         { refreshViewCurrentHeight ->
           coroutineScope.launch {
-            val newAlpha = abs(refreshViewCurrentHeight / heightOfRefreshView)
-            circleAlpha.animateTo(1 - newAlpha)
+            // circle alpha,scale,offset
+           /* val dragPercent = Math.min(0.85f, Math.abs(mPercent))
+            val offsetX: Float = widthScreen / 2 - mCircle.getWidth() / 2
+            val offsetY: Float = -(heightScreen / 100)
+            matrix.postScale(dragPercent, dragPercent, mCirclePivotX, mCirclePivotY)
+            matrix.postTranslate(offsetX, offsetY)
+            circleAlpha.animateTo(dragPercent / 2 * 500)*/
           }
         },
         {
@@ -249,27 +259,21 @@ fun FoodOptionsList(
 }
 
 @Composable
-fun KitchenComposable(circleAlpha: Float, modifier: Modifier) {
+fun KitchenComposable(circleModifier: Modifier, panModifier: Modifier) {
   Box(
-    modifier
+    Modifier
       .fillMaxWidth()
   ) {
 
-    CircleComposable(
-      Modifier
-        .align(Alignment.Center)
-        .alpha(circleAlpha)
+    CircleComposable(circleModifier
     )
 
-    UtensilComposable(
-      Modifier
-        .align(Alignment.Center)
-    )
+    PanComposable(panModifier)
   }
 }
 
 @Composable
-fun UtensilComposable(modifier: Modifier) {
+fun PanComposable(modifier: Modifier) {
   Image(
     painter = painterResource(id = R.drawable.pan),
     contentDescription = null,
