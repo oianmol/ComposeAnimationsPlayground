@@ -21,6 +21,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import dev.baseio.composeplayground.ui.animations.*
 import dev.baseio.composeplayground.ui.animations.anmolverma.BellAnimation
+import dev.baseio.composeplayground.ui.animations.anmolverma.GramophoneDisc
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
     ) {
       HorizontalPager(
         modifier = Modifier.fillMaxSize(),
-        count = 16, state = pagerState,
+        count = 17, state = pagerState,
       ) { page ->
         // Our page content
         when (page) {
@@ -93,9 +94,10 @@ class MainActivity : ComponentActivity() {
           13 -> {
             AndroidMadSkills()
           }
-          14 -> {
+          16 -> {
             ShootingStarsAnimation()
           }
+
           0 -> {
             NetflixIntroAnimation()
           }
@@ -123,6 +125,9 @@ class MainActivity : ComponentActivity() {
             SlackAnimation()
           }
           2 -> {
+            GramophoneDisc()
+          }
+          14 -> {
             Box(Modifier.fillMaxSize()) {
               ChatMessageReactions(Modifier.align(Alignment.Center))
             }
