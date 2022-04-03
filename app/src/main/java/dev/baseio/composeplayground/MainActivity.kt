@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.accompanist.insets.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -24,6 +27,7 @@ import dev.baseio.composeplayground.ui.animations.anmolverma.BellAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.GramophoneDisc
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
+import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.GoogleIO
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme
@@ -33,12 +37,14 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     window.apply {
       clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+      clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
       addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         decorView.systemUiVisibility =
-          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
       }
       statusBarColor = Color.TRANSPARENT
+      navigationBarColor = Color.TRANSPARENT
     }
     super.onCreate(savedInstanceState)
 
@@ -66,7 +72,7 @@ class MainActivity : ComponentActivity() {
     ) {
       HorizontalPager(
         modifier = Modifier.fillMaxSize(),
-        count = 17, state = pagerState,
+        count = 18, state = pagerState,
       ) { page ->
         // Our page content
         when (page) {
@@ -97,8 +103,10 @@ class MainActivity : ComponentActivity() {
           16 -> {
             ShootingStarsAnimation()
           }
-
           0 -> {
+            GoogleIO()
+          }
+          17 -> {
             NetflixIntroAnimation()
           }
           11 -> {
@@ -152,4 +160,12 @@ class MainActivity : ComponentActivity() {
       )
     }
   }
+}
+
+fun hideSystemBars(window: Window) {
+  val windowInsetsController =
+    ViewCompat.getWindowInsetsController(window.decorView) ?: return
+  // Configure the behavior of the hidden system bars
+  windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
+  windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 }
