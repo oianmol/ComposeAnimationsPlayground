@@ -31,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.colorBlue
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.colorGreen
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.colorOrange
@@ -38,8 +39,10 @@ import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.RESIS
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.yellow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.random.Random
 
 /**
  * https://twitter.com/jmtrivedi/status/1517561485622321152?s=20&t=cp99MJHWwc4bosgrDCqbWA
@@ -90,6 +93,7 @@ fun BoxScope.CoolToolBar() {
             .height(CoolToolbarControlSpec.toolbarHeight.dp)
             .padding(start = 8.dp), userScrollEnabled = canAcceptTouchScroll
     ) {
+
 
         itemsIndexed(toolbarItems) { index, item ->
             Column(
@@ -184,12 +188,18 @@ fun ToolBarItemView(toolbarItemData: ToolbarItemData) {
     var shouldAnimate by remember {
         mutableStateOf(toolbarItemData.shouldAnimate)
     }
-    val scale by animateFloatAsState(targetValue = if (shouldAnimate) 1.1f else 1f, tween(500))
+    val scale = remember {
+        androidx.compose.animation.core.Animatable(0.6f)
+    }
     val offset by animateFloatAsState(
         targetValue = if (shouldAnimate) CoolToolbarControlSpec.toolbarWidth.toFloat()
             .times(1.1f) else 0f,
-        tween(200)
+        tween(700)
     )
+
+    LaunchedEffect(key1 = Unit, block = {
+        scale.animateTo(1f, tween(400))
+    })
 
     LaunchedEffect(key1 = Unit, block = {
         toolbarItemData.changeObserver.receiveAsFlow().collect {
@@ -199,7 +209,7 @@ fun ToolBarItemView(toolbarItemData: ToolbarItemData) {
 
     Row(
         Modifier
-            .scale(scale)
+            .scale(scale.value)
             .offset(x = offset.dp)
             .background(toolbarItemData.color, shape = RoundedCornerShape(15))
             .height(CoolToolbarControlSpec.toolbarWidth.times(0.8).dp),
@@ -218,11 +228,11 @@ fun ToolBarItemView(toolbarItemData: ToolbarItemData) {
         )
         AnimatedVisibility(
             visible = shouldAnimate,
-            enter = fadeIn(tween(200)),
-            exit = fadeOut(tween(200)),
+            enter = slideInHorizontally() + fadeIn(),
+            exit = slideOutHorizontally() + fadeOut(),
         ) {
             Text(
-                text = toolbarItemData.title, style = TextStyle(color = Color.White),
+                text = toolbarItemData.title, style = TextStyle(color = Color.White, fontSize = 16.sp),
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
