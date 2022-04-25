@@ -384,7 +384,7 @@ private fun BoxScope.CloudsBottom(
         .align(Alignment.BottomStart)
     )
     Image(
-      painter = painterResource(id = R.drawable.clouds_left),
+      painter = painterResource(id = R.drawable.clouds_right),
       contentDescription = null,
       Modifier
         .scale(centerCloud)
