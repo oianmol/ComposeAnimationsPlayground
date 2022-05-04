@@ -30,7 +30,7 @@ fun LoadingPreviewView() {
 
             Size.values().forEach { size ->
                 Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
-                    LoadingIndicator(LoadingAnimation.threeBalls, size.factor, Speed.normal.factor)
+                    LoadingIndicator(LoadingAnimation.threeBallsBouncing, size.factor, Speed.normal.factor)
                     Text(size.toString(), style = Typography.caption)
                 }
             }
@@ -39,7 +39,7 @@ fun LoadingPreviewView() {
         Text(text = "Speeds", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
         Speed.values().forEach { speed ->
             Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
-                LoadingIndicator(LoadingAnimation.threeBalls, Size.medium.factor, speed.factor)
+                LoadingIndicator(LoadingAnimation.threeBallsBouncing, Size.medium.factor, speed.factor)
                 Text(speed.toString(), style = Typography.caption)
             }
         }

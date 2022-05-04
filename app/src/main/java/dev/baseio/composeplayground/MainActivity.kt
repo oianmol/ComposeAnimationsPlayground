@@ -8,12 +8,18 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,9 +34,14 @@ import dev.baseio.composeplayground.ui.animations.anmolverma.GramophoneDisc
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.GoogleIO
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.LoadingAnimation
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.LoadingIndicator
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.Size
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.Speed
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme
+import dev.baseio.composeplayground.ui.theme.Typography
 
 class MainActivity : ComponentActivity() {
   @OptIn(ExperimentalPagerApi::class)
@@ -72,91 +83,141 @@ class MainActivity : ComponentActivity() {
     ) {
       HorizontalPager(
         modifier = Modifier.fillMaxSize(),
-        count = 18, state = pagerState,
+        count = 19, state = pagerState,
       ) { page ->
-        // Our page content
-        when (page) {
-          4 -> {
-            PullToRefreshOne()
+          // Our page content
+          when (page) {
+              0 -> {
+                  GoogleIO()
+              }
+              1 -> {
+                  SlackAnimation()
+              }
+              2 -> {
+//            GramophoneDisc()
+              }
+              3 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      MenuToClose(Modifier.align(Alignment.Center))
+                  }
+              }
+              4 -> {
+                  PullToRefreshOne()
+              }
+              5 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      BellAnimation(Modifier.align(Alignment.Center))
+                  }
+              }
+              6 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      YahooWeatherAndSun(Modifier.align(Alignment.Center))
+                  }
+              }
+              7 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      GlowingRingLoader(Modifier.align(Alignment.Center))
+                  }
+              }
+              8 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      PlanetarySystem(Modifier.align(Alignment.Center))
+                  }
+              }
+              9 -> {
+                  Box(modifier = Modifier.fillMaxSize()) {
+                      ScalingRotatingLoader()
+                  }
+              }
+
+
+              10 -> {
+                  Box(modifier = Modifier.fillMaxSize()) {
+                      IOSSleepSchedule()
+                  }
+              }
+              11 -> {
+                  Box(modifier = Modifier.fillMaxSize()) {
+                      Github404(Modifier)
+                  }
+              }
+              12 -> {
+                  TwitterSplashAnimation()
+              }
+              13 -> {
+                  AndroidMadSkills()
+              }
+              14 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      ChatMessageReactions(Modifier.align(Alignment.Center))
+                  }
+              }
+              15 -> {
+                  Box(Modifier.fillMaxSize()) {
+                      LikeAnimation(Modifier.align(Alignment.Center))
+                  }
+              }
+              16 -> {
+                  ShootingStarsAnimation()
+              }
+              17 -> {
+                  NetflixIntroAnimation()
+              }
+              18 -> {
+                  Column(
+                      Modifier
+                          .verticalScroll(rememberScrollState())
+                          .padding(24.dp)
+                  ) {
+                      Column {
+                          Text(
+                              text = "Sizes",
+                              style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold)
+                          )
+
+                          Size.values().forEach { size ->
+                              Column(
+                                  Modifier
+                                      .border(1.dp, androidx.compose.ui.graphics.Color.Black)
+                                      .padding(8.dp)
+                              ) {
+                                  LoadingIndicator(
+                                      LoadingAnimation.threeBallsBouncing,
+                                      size.factor,
+                                      Speed.normal.factor
+                                  )
+                                  Text(size.toString(), style = Typography.caption)
+                              }
+                          }
+                      }
+                      Divider()
+                      Text(
+                          text = "Speeds",
+                          style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold)
+                      )
+                      Speed.values().forEach { speed ->
+                          Column(
+                              Modifier
+                                  .border(1.dp, androidx.compose.ui.graphics.Color.Black)
+                                  .padding(8.dp)
+                          ) {
+                              LoadingIndicator(
+                                  LoadingAnimation.threeBallsBouncing,
+                                  Size.medium.factor,
+                                  speed.factor
+                              )
+                              Text(speed.toString(), style = Typography.caption)
+                          }
+                      }
+                  }
+              }
           }
-          7 -> {
-            Box(Modifier.fillMaxSize()) {
-              GlowingRingLoader(Modifier.align(Alignment.Center))
-            }
-          }
-          6 -> {
-            Box(Modifier.fillMaxSize()) {
-              YahooWeatherAndSun(Modifier.align(Alignment.Center))
-            }
-          }
-          10 -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-              IOSSleepSchedule()
-            }
-          }
-          12 -> {
-            TwitterSplashAnimation()
-          }
-          13 -> {
-            AndroidMadSkills()
-          }
-          16 -> {
-            ShootingStarsAnimation()
-          }
-          0 -> {
-            GoogleIO()
-          }
-          17 -> {
-            NetflixIntroAnimation()
-          }
-          11 -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-              Github404(Modifier)
-            }
-          }
-          9 -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-              ScalingRotatingLoader()
-            }
-          }
-          8 -> {
-            Box(Modifier.fillMaxSize()) {
-              PlanetarySystem(Modifier.align(Alignment.Center))
-            }
-          }
-          15 -> {
-            Box(Modifier.fillMaxSize()) {
-              LikeAnimation(Modifier.align(Alignment.Center))
-            }
-          }
-          1 -> {
-            SlackAnimation()
-          }
-          2 -> {
-            GramophoneDisc()
-          }
-          14 -> {
-            Box(Modifier.fillMaxSize()) {
-              ChatMessageReactions(Modifier.align(Alignment.Center))
-            }
-          }
-          3 -> {
-            Box(Modifier.fillMaxSize()) {
-              MenuToClose(Modifier.align(Alignment.Center))
-            }
-          }
-          5 -> {
-            Box(Modifier.fillMaxSize()) {
-              BellAnimation(Modifier.align(Alignment.Center))
-            }
-          }
-        }
       }
       HorizontalPagerIndicator(
         pagerState = pagerState,
         modifier = Modifier
-          .align(Alignment.BottomCenter)
-          .padding(16.dp)
+            .align(Alignment.BottomCenter)
+            .padding(16.dp)
       )
     }
   }

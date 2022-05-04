@@ -5,12 +5,17 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun LoadingIndicator(
-    animation: LoadingAnimation,
+    animation: LoadingAnimation = LoadingAnimation.threeBallsBouncing,
     size: Int,
     speed: Double, color: Color = Color.Black
 ) {
     when (animation) {
         LoadingAnimation.threeBalls -> LoadingThreeBalls(color = color, size = size, speed = speed)
+        LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
+            color = color,
+            size = size,
+            speed = speed
+        )
         /*LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
             color = color,
             size = size,
