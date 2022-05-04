@@ -16,69 +16,69 @@ fun LoadingIndicator(
             size = size,
             speed = speed
         )
-        /* LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
+       LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
             color = color,
             size = size,
             speed = speed
         )
-        LoadingAnimation.threeBallsTriangle -> LoadingThreeBallsTriangle(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.fiveLines -> LoadingFiveLines(color = color, size = size, speed = speed)
-        LoadingAnimation.fiveLinesChronological -> LoadingFiveLinesChronological(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.fiveLinesWave -> LoadingFiveLinesWave(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.fiveLinesCenter -> LoadingFiveLinesCenter(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.fiveLinesPulse -> LoadingFiveLinesPulse(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.pulse -> LoadingPulse(color = color, size = size, speed = speed)
-        LoadingAnimation.pulseOutline -> LoadingPulseOutline(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.pulseOutlineRepeater -> LoadingPulseOutlineRepeater(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.circleTrim -> LoadingCircleTrim(color = color, size = size, speed = speed)
-        LoadingAnimation.circleRunner -> LoadingCircleRunner(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.circleBlinks -> LoadingCircleBlinks(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.circleBars -> LoadingCircleBars(color = color, size = size, speed = speed)
-        LoadingAnimation.doubleHelix -> LoadingDoubleHelix(
-            color = color,
-            size = size,
-            speed = speed
-        )
-        LoadingAnimation.bar -> LoadingBar(color = color, size = size, speed = speed)
-        LoadingAnimation.barStripes -> LoadingBarStripes(color = color, size = size, speed = speed)
-        LoadingAnimation.text -> LoadingText(color = color, size = size, speed = speed)
-        LoadingAnimation.heart -> LoadingHeart(color = color, size = size, speed = speed)*/
+        /* LoadingAnimation.threeBallsTriangle -> LoadingThreeBallsTriangle(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.fiveLines -> LoadingFiveLines(color = color, size = size, speed = speed)
+       LoadingAnimation.fiveLinesChronological -> LoadingFiveLinesChronological(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.fiveLinesWave -> LoadingFiveLinesWave(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.fiveLinesCenter -> LoadingFiveLinesCenter(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.fiveLinesPulse -> LoadingFiveLinesPulse(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.pulse -> LoadingPulse(color = color, size = size, speed = speed)
+       LoadingAnimation.pulseOutline -> LoadingPulseOutline(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.pulseOutlineRepeater -> LoadingPulseOutlineRepeater(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.circleTrim -> LoadingCircleTrim(color = color, size = size, speed = speed)
+       LoadingAnimation.circleRunner -> LoadingCircleRunner(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.circleBlinks -> LoadingCircleBlinks(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.circleBars -> LoadingCircleBars(color = color, size = size, speed = speed)
+       LoadingAnimation.doubleHelix -> LoadingDoubleHelix(
+           color = color,
+           size = size,
+           speed = speed
+       )
+       LoadingAnimation.bar -> LoadingBar(color = color, size = size, speed = speed)
+       LoadingAnimation.barStripes -> LoadingBarStripes(color = color, size = size, speed = speed)
+       LoadingAnimation.text -> LoadingText(color = color, size = size, speed = speed)
+       LoadingAnimation.heart -> LoadingHeart(color = color, size = size, speed = speed)*/
     }
 }
 
