@@ -15,6 +15,10 @@ Loading Indicators - Anmol Verma
 
 https://user-images.githubusercontent.com/4393101/166666261-f00dbcbd-c595-4ac2-bccb-fbe3fabc40e8.mp4
 
+https://user-images.githubusercontent.com/4393101/166669205-0c33de87-331d-438f-8900-61c98bb25b64.mp4
+
+
+
 Pull To Refresh By Yalantis - Anmol Verma
 
 https://user-images.githubusercontent.com/32521663/157591031-b8d3ffde-5195-4ad2-9b23-c5e2846e3e4c.mp4
