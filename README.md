@@ -11,6 +11,9 @@ Slack Animation - Anmol Verma
 
 https://user-images.githubusercontent.com/4393101/160245259-f4fedfcb-0b6c-4ca7-9fed-126348b87a76.mp4
 
+Loading Indicators - Anmol Verma
+
+https://user-images.githubusercontent.com/4393101/166666261-f00dbcbd-c595-4ac2-bccb-fbe3fabc40e8.mp4
 
 Pull To Refresh By Yalantis - Anmol Verma
 
@@ -66,6 +69,5 @@ https://user-images.githubusercontent.com/32521663/158961033-205137ae-213a-4dd3-
 Android Dev MadSkills - Anmol Verma
 
 https://user-images.githubusercontent.com/32521663/159110243-b18ff462-febc-48b4-a00e-d77d63a9dc2c.mp4
-
 
 
