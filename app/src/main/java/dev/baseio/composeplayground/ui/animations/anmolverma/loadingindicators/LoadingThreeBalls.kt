@@ -39,7 +39,6 @@ fun LoadingThreeBalls(color: Color = Color.Black, size: Int = 50, speed: Double 
             EachCircle(size, counter, index, color)
         }
     }
-
 }
 
 @Composable

@@ -50,6 +50,4 @@ fun LoadingPreviewView() {
             }
         }
     }
-
-
 }

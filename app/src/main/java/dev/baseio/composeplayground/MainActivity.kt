@@ -8,12 +8,18 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,9 +34,14 @@ import dev.baseio.composeplayground.ui.animations.anmolverma.GramophoneDisc
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.GoogleIO
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.LoadingAnimation
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.LoadingIndicator
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.Size
+import dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators.Speed
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme
+import dev.baseio.composeplayground.ui.theme.Typography
 
 class MainActivity : ComponentActivity() {
   @OptIn(ExperimentalPagerApi::class)
@@ -72,7 +83,7 @@ class MainActivity : ComponentActivity() {
     ) {
       HorizontalPager(
         modifier = Modifier.fillMaxSize(),
-        count = 18, state = pagerState,
+        count = 19, state = pagerState,
       ) { page ->
         // Our page content
         when (page) {
@@ -133,7 +144,7 @@ class MainActivity : ComponentActivity() {
             SlackAnimation()
           }
           2 -> {
-            GramophoneDisc()
+//            GramophoneDisc()
           }
           14 -> {
             Box(Modifier.fillMaxSize()) {
@@ -148,6 +159,36 @@ class MainActivity : ComponentActivity() {
           5 -> {
             Box(Modifier.fillMaxSize()) {
               BellAnimation(Modifier.align(Alignment.Center))
+            }
+          }
+          18 -> {
+            Column(
+              Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)){
+              LoadingAnimation.values().forEach { loadingAnim->
+                Column(
+                  Modifier) {
+                  Column {
+                    Text(text = "Sizes", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
+
+                    Size.values().forEach { size ->
+                      Column(Modifier.border(1.dp, androidx.compose.ui.graphics.Color.Black).padding(8.dp)) {
+                        LoadingIndicator(loadingAnim, size.factor, Speed.normal.factor)
+                        Text(size.toString(), style = Typography.caption)
+                      }
+                    }
+                  }
+                  Divider()
+                  Text(text = "Speeds", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
+                  Speed.values().forEach { speed ->
+                    Column(Modifier.border(1.dp, androidx.compose.ui.graphics.Color.Black).padding(8.dp)) {
+                      LoadingIndicator(loadingAnim, Size.medium.factor, speed.factor)
+                      Text(speed.toString(), style = Typography.caption)
+                    }
+                  }
+                }
+              }
             }
           }
         }
