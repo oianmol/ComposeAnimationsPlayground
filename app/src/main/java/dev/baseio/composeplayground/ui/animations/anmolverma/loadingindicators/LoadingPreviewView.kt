@@ -1,6 +1,7 @@
 package dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -24,13 +25,13 @@ fun LoadingPreviewView() {
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
-            .padding(24.dp)) {
+            .padding(24.dp), verticalArrangement = Arrangement.SpaceBetween) {
         Column {
             Text(text = "Sizes", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
 
             Size.values().forEach { size ->
                 Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
-                    LoadingIndicator(LoadingAnimation.threeBalls, size.factor, Speed.normal.factor)
+                    LoadingIndicator(LoadingAnimation.threeBallsRotation, size.factor, Speed.normal.factor)
                     Text(size.toString(), style = Typography.caption)
                 }
             }
@@ -39,7 +40,7 @@ fun LoadingPreviewView() {
         Text(text = "Speeds", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
         Speed.values().forEach { speed ->
             Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
-                LoadingIndicator(LoadingAnimation.threeBalls, Size.medium.factor, speed.factor)
+                LoadingIndicator(LoadingAnimation.threeBallsRotation, Size.medium.factor, speed.factor)
                 Text(speed.toString(), style = Typography.caption)
             }
         }

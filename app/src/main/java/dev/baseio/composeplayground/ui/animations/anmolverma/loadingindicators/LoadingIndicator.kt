@@ -11,12 +11,12 @@ fun LoadingIndicator(
 ) {
     when (animation) {
         LoadingAnimation.threeBalls -> LoadingThreeBalls(color = color, size = size, speed = speed)
-        /*LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
+       LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
             color = color,
             size = size,
             speed = speed
         )
-        LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
+        /* LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
             color = color,
             size = size,
             speed = speed
