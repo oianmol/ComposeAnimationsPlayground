@@ -10,13 +10,14 @@ fun LoadingIndicator(
     speed: Double, color: Color = Color.Black
 ) {
     when (animation) {
+        LoadingAnimation.text -> LoadingText(color = color, size = size, speed = speed)
         LoadingAnimation.threeBalls -> LoadingThreeBalls(color = color, size = size, speed = speed)
-       LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
+        LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
             color = color,
             size = size,
             speed = speed
         )
-       LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
+        LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
             color = color,
             size = size,
             speed = speed
@@ -77,8 +78,10 @@ fun LoadingIndicator(
        )
        LoadingAnimation.bar -> LoadingBar(color = color, size = size, speed = speed)
        LoadingAnimation.barStripes -> LoadingBarStripes(color = color, size = size, speed = speed)
-       LoadingAnimation.text -> LoadingText(color = color, size = size, speed = speed)
        LoadingAnimation.heart -> LoadingHeart(color = color, size = size, speed = speed)*/
+        else -> {
+            // Do Nothing
+        }
     }
 }
 
