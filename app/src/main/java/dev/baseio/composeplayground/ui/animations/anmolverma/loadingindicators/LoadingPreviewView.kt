@@ -25,24 +25,31 @@ fun LoadingPreviewView() {
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
-            .padding(24.dp), verticalArrangement = Arrangement.SpaceBetween) {
-        Column {
-            Text(text = "Sizes", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
+            .padding(24.dp)){
+        LoadingAnimation.values().forEach { loadingAnim->
+            Column(
+                Modifier) {
+                Column {
+                    Text(text = "Sizes", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
 
-            Size.values().forEach { size ->
-                Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
-                    LoadingIndicator(LoadingAnimation.threeBallsBouncing, size.factor, Speed.normal.factor)
-                    Text(size.toString(), style = Typography.caption)
+                    Size.values().forEach { size ->
+                        Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
+                            LoadingIndicator(loadingAnim, size.factor, Speed.normal.factor)
+                            Text(size.toString(), style = Typography.caption)
+                        }
+                    }
+                }
+                Divider()
+                Text(text = "Speeds", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
+                Speed.values().forEach { speed ->
+                    Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
+                        LoadingIndicator(loadingAnim, Size.medium.factor, speed.factor)
+                        Text(speed.toString(), style = Typography.caption)
+                    }
                 }
             }
         }
-        Divider()
-        Text(text = "Speeds", style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold))
-        Speed.values().forEach { speed ->
-            Column(Modifier.border(1.dp, Color.Black).padding(8.dp)) {
-                LoadingIndicator(LoadingAnimation.threeBallsBouncing, Size.medium.factor, speed.factor)
-                Text(speed.toString(), style = Typography.caption)
-            }
-        }
     }
+
+
 }
