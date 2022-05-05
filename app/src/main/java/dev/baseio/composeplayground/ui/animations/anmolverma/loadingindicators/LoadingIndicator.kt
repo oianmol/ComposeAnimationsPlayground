@@ -11,16 +11,17 @@ fun LoadingIndicator(
 ) {
     when (animation) {
         LoadingAnimation.threeBalls -> LoadingThreeBalls(color = color, size = size, speed = speed)
-       LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
+        LoadingAnimation.threeBallsRotation -> LoadingThreeBallsRotation(
             color = color,
             size = size,
             speed = speed
         )
-       LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
+        LoadingAnimation.threeBallsBouncing -> LoadingThreeBallsBouncing(
             color = color,
             size = size,
             speed = speed
         )
+        LoadingAnimation.pulse -> LoadingPulse(color = color, size = size, speed = speed)
         /* LoadingAnimation.threeBallsTriangle -> LoadingThreeBallsTriangle(
            color = color,
            size = size,
@@ -47,7 +48,6 @@ fun LoadingIndicator(
            size = size,
            speed = speed
        )
-       LoadingAnimation.pulse -> LoadingPulse(color = color, size = size, speed = speed)
        LoadingAnimation.pulseOutline -> LoadingPulseOutline(
            color = color,
            size = size,
