@@ -22,12 +22,12 @@ fun LoadingIndicator(
             speed = speed
         )
         LoadingAnimation.pulse -> LoadingPulse(color = color, size = size, speed = speed)
+        LoadingAnimation.fiveLines -> LoadingFiveLines(color = color, size = size, speed = speed)
         /* LoadingAnimation.threeBallsTriangle -> LoadingThreeBallsTriangle(
            color = color,
            size = size,
            speed = speed
        )
-       LoadingAnimation.fiveLines -> LoadingFiveLines(color = color, size = size, speed = speed)
        LoadingAnimation.fiveLinesChronological -> LoadingFiveLinesChronological(
            color = color,
            size = size,
