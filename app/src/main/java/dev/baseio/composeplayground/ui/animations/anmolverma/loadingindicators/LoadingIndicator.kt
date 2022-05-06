@@ -23,6 +23,11 @@ fun LoadingIndicator(
         )
         LoadingAnimation.pulse -> LoadingPulse(color = color, size = size, speed = speed)
         LoadingAnimation.fiveLines -> LoadingFiveLines(color = color, size = size, speed = speed)
+        LoadingAnimation.fiveLinesCenter -> LoadingFiveLinesCenter(
+            color = color,
+            size = size,
+            speed = speed
+        )
         /* LoadingAnimation.threeBallsTriangle -> LoadingThreeBallsTriangle(
            color = color,
            size = size,
@@ -38,11 +43,7 @@ fun LoadingIndicator(
            size = size,
            speed = speed
        )
-       LoadingAnimation.fiveLinesCenter -> LoadingFiveLinesCenter(
-           color = color,
-           size = size,
-           speed = speed
-       )
+
        LoadingAnimation.fiveLinesPulse -> LoadingFiveLinesPulse(
            color = color,
            size = size,
