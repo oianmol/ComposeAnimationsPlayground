@@ -29,7 +29,7 @@ fun LoadingPreviewView() {
     ) {
         LoadingAnimation.values().forEach { loadingAnim ->
             Column(
-                Modifier.padding(24.dp)
+                Modifier.padding(12.dp)
             ) {
                 Text(
                     text = loadingAnim.toString(),
@@ -51,7 +51,7 @@ fun LoadingPreviewView() {
                         }
                     }
                 }
-                Divider()
+                Divider(Modifier.padding(vertical = 12.dp))
                 Text(
                     text = "Speeds",
                     style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold)
