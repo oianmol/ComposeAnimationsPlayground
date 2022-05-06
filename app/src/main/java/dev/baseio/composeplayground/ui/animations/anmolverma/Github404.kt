@@ -190,7 +190,7 @@ private fun Looking404(
 }
 
 @Composable
-private fun GithubAvatar(
+fun GithubAvatar(
   githubAvatarX: Float,
   githubAvatarY: Float
 ) {
@@ -229,7 +229,7 @@ private fun AvatarShadow(
 }
 
 @Composable
-private fun BackgroundImageGithub(bgImageScaleFactor: Float) {
+fun BackgroundImageGithub(bgImageScaleFactor: Float) {
   Image(
     painter = androidx.compose.ui.res.painterResource(id = R.drawable.background),
     contentDescription = null,

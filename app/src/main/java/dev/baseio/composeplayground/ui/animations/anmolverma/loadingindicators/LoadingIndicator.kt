@@ -33,11 +33,7 @@ fun LoadingIndicator(
            size = size,
            speed = speed
        )
-       LoadingAnimation.fiveLinesChronological -> LoadingFiveLinesChronological(
-           color = color,
-           size = size,
-           speed = speed
-       )
+
        LoadingAnimation.fiveLinesWave -> LoadingFiveLinesWave(
            color = color,
            size = size,
@@ -89,7 +85,6 @@ enum class LoadingAnimation {
     threeBallsBouncing,
     threeBallsTriangle,
     fiveLines,
-    fiveLinesChronological,
     fiveLinesWave,
     fiveLinesCenter,
     fiveLinesPulse,
