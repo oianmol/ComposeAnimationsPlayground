@@ -39,16 +39,19 @@ fun DribbleCircleTouch() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clickable {
-                isOpen = !isOpen
-            }
             .background(Color(31, 34, 43))
     ) {
 
-        CenterCircle(isOpen, Modifier.align(Alignment.Center))
+        RandomParticles(isOpen, Modifier.align(Alignment.Center))
+
+        CenterCircle(isOpen,
+            Modifier
+                .align(Alignment.Center)
+                .clickable {
+                    isOpen = !isOpen
+                })
         OuterCircle(isOpen, Modifier.align(Alignment.Center))
 
-        RandomParticles(isOpen, Modifier.align(Alignment.Center))
 
     }
 
@@ -88,34 +91,36 @@ fun DrawParticle(open: Boolean, modifier: Modifier, dribbleParticle: DribblePart
         Animatable(dribbleParticle.posY)
     }
 
+    val scope = rememberCoroutineScope()
+
 
     val isVisible = remember {
-        Animatable(if (open) 1f else 0f)
+        Animatable(1f)
     }
 
     LaunchedEffect(key1 = open, block = {
-
-        launch {
-            val finalValue =
-                (dribbleParticle.posX + cos(Math.toRadians(dribbleParticle.angle.toDouble())) * 1500f).toFloat()
+        scope.launch {
+            val finalValue = if (!open) dribbleParticle.posX else dribbleParticle.finalX().toFloat()
             animateX.animateTo(
-                if(!open) dribbleParticle.posX else finalValue,
-                tween(3000, easing = LinearEasing)
+                finalValue,
+                springSpec1()
             )
+            animateX.animateTo(dribbleParticle.posX, springSpec1())
         }
-        launch {
-            val finalValue =
-                (dribbleParticle.posY + sin(Math.toRadians(dribbleParticle.angle.toDouble())) * 1500f).toFloat()
+        scope.launch {
+            val finalValue = if (!open) dribbleParticle.posY else dribbleParticle.finalY().toFloat()
             animateY.animateTo(
-                if(!open) dribbleParticle.posY else  finalValue,
-                tween(3000, easing = LinearEasing)
+                finalValue,
+                springSpec1()
+            )
+            animateY.animateTo(
+                dribbleParticle.posY, springSpec1()
             )
         }
-        launch {
-            isVisible.snapTo(if (open) 1f else 0f)
-        }
-        launch {
-            rotation.animateTo(360f, tween(3000))
+        scope.launch {
+            rotation.animateTo(
+                if (rotation.value == 0f) 360f else 0f, springSpec1()
+            )
         }
     })
 
@@ -133,6 +138,19 @@ fun DrawParticle(open: Boolean, modifier: Modifier, dribbleParticle: DribblePart
             )
             .size(dribbleParticle.shapeSize)
     )
+}
+
+private fun springSpec1(): SpringSpec<Float> = spring(
+    dampingRatio = Spring.DampingRatioHighBouncy,
+    stiffness = Spring.StiffnessLow
+)
+
+private fun DribbleParticle.finalX(): Double {
+    return this.posX + cos(Math.toRadians(this.angle.toDouble())) * 250f
+}
+
+private fun DribbleParticle.finalY(): Double {
+    return this.posY + sin(Math.toRadians(this.angle.toDouble())) * 250f
 }
 
 val colors = mutableListOf<Color>().apply {
@@ -224,8 +242,8 @@ fun dribbleCircleParticles(centerOffset: Offset): List<DribbleParticle> =
     }
 
 data class DribbleParticle(
-    val posX: Float,
-    val posY: Float,
+    var posX: Float,
+    var posY: Float,
     var angle: Float,
     val shape: Shape,
     val color: Color,
