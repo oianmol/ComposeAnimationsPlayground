@@ -24,10 +24,10 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import dev.baseio.composeplayground.ui.animations.*
 import dev.baseio.composeplayground.ui.animations.anmolverma.BellAnimation
-import dev.baseio.composeplayground.ui.animations.anmolverma.GramophoneDisc
 import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.GoogleIO
+import dev.baseio.composeplayground.ui.animations.anmolverma.gramophoneplayer.GramophoneDisc
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
 import dev.baseio.composeplayground.ui.theme.ComposePlaygroundTheme

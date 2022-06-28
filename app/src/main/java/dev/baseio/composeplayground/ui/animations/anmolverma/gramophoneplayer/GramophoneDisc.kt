@@ -1,11 +1,10 @@
-package dev.baseio.composeplayground.ui.animations.anmolverma
+package dev.baseio.composeplayground.ui.animations.anmolverma.gramophoneplayer
 
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,18 +17,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import dev.baseio.composeplayground.R
+import dev.baseio.composeplayground.ui.animations.anmolverma.gramophoneplayer.circlelist.CircleList
+import dev.baseio.composeplayground.ui.animations.anmolverma.gramophoneplayer.circlelist.Direction
 
 val discBackground = Color(229, 236, 229)
-
 val colorRedStart = Color(230, 100, 91)
-
 val innerDisc = Color(52, 46, 45)
 
 @Composable
@@ -59,8 +56,6 @@ fun GramophoneDisc() {
     modifier = Modifier
       .background(discBackground)
   ) {
-
-
     AlbumArtBackground()
     BlurredAlbumArt()
     OuterRing(xOffset, yOffset, gramophoneSize, rotateAnimation)
@@ -81,24 +76,31 @@ private fun AlbumArtBackground() {
 @Composable
 fun AlbumSongsList(
 ) {
-  val albumHeight = LocalDensity.current.run { 48.dp.toPx() }
-  CircularList(
-    modifier = Modifier.fillMaxSize(),
-    circularFraction = -0.50f,
+  val albumHeight = LocalDensity.current.run { 74.dp }
+  CircleList(
+    visibleItems = 8,
+    circularFraction = 0.75f,
+    direction = Direction.Right,
+    modifier = Modifier
+      .fillMaxSize(),
   ) {
-    repeat(10) {
-      Album()
+    for (i in 0 until 60) {
+      Album(size = albumHeight)
     }
   }
 }
 
 @Composable
-fun Album() {
-  GlideImage(
-    imageModel = "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/06/15134504/Spotify-Cover-Art-with-Text-Aligned-480x480.png",
-    contentDescription = null,
-    modifier = Modifier,
-  )
+fun Album(size: Dp) {
+  Box(modifier = Modifier.size(size)) {
+    GlideImage(
+      imageModel = "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/06/15134504/Spotify-Cover-Art-with-Text-Aligned-480x480.png",
+      contentDescription = null,
+      modifier = Modifier
+        .size(size)
+        .clip(shape = RoundedCornerShape(5)),
+    )
+  }
 }
 
 @Composable
@@ -167,6 +169,4 @@ private fun OuterRing(
         )
     )
   }
-
-
 }
