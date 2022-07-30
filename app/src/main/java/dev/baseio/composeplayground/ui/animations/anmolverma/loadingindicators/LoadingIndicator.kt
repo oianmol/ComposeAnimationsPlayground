@@ -76,6 +76,7 @@ fun LoadingIndicator(
        LoadingAnimation.barStripes -> LoadingBarStripes(color = color, size = size, speed = speed)
        LoadingAnimation.text -> LoadingText(color = color, size = size, speed = speed)
        LoadingAnimation.heart -> LoadingHeart(color = color, size = size, speed = speed)*/
+        else -> {}
     }
 }
 

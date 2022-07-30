@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.accompanist.insets.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -52,10 +51,8 @@ class MainActivity : ComponentActivity() {
       ComposePlaygroundTheme {
         // A surface container using the 'background' color from the theme
         MaterialTheme() {
-          ProvideWindowInsets() {
-            Surface(color = MaterialTheme.colors.background) {
-              AnimationsPager()
-            }
+          Surface(color = MaterialTheme.colors.background) {
+            AnimationsPager()
           }
         }
       }
