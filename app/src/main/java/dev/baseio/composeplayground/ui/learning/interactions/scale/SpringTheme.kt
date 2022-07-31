@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.learning.interactions
+package dev.baseio.composeplayground.ui.learning.interactions.scale
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.runtime.Composable
@@ -29,5 +29,5 @@ private object DebugSpringTheme : SpringButtonTheme {
 
 }
 
-public val LocalSpringTheme: ProvidableCompositionLocal<SpringButtonTheme> =
+val LocalSpringTheme: ProvidableCompositionLocal<SpringButtonTheme> =
     staticCompositionLocalOf { DebugSpringTheme }

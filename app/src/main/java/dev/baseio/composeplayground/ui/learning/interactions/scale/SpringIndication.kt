@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.learning.interactions
+package dev.baseio.composeplayground.ui.learning.interactions.scale
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D

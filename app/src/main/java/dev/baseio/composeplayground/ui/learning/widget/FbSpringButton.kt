@@ -12,9 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import dev.baseio.composeplayground.ui.learning.interactions.SpringButtonTheme
-import dev.baseio.composeplayground.ui.learning.interactions.SpringConfig
-import dev.baseio.composeplayground.ui.learning.interactions.rememberSpringIndication
+import dev.baseio.composeplayground.ui.learning.interactions.scale.SpringButtonTheme
+import dev.baseio.composeplayground.ui.learning.interactions.scale.SpringConfig
+import dev.baseio.composeplayground.ui.learning.interactions.scale.rememberSpringIndication
 
 @Composable
 fun FbSpringButton(
