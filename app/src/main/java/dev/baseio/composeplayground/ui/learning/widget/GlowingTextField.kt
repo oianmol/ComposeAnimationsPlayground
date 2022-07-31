@@ -33,6 +33,7 @@ fun GlowingTextField(modifier: Modifier) {
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
+        interactionSource = interactionSource,
         modifier = modifier.indication(
             interactionSource,
             rememberGlowIndicator(GlowingTheme.defaultGlowConfig())

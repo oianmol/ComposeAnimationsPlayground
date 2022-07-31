@@ -31,7 +31,7 @@ class GlowIndication(private val glowConfig: State<GlowConfig>? = null) : Indica
                         cap = StrokeCap.Round
                     ), cornerRadius = CornerRadius(8f, 8f)
                 )
-            }else{
+            } else {
                 drawRoundRect(
                     glow.value.glowColor,
                     alpha = 1f,
