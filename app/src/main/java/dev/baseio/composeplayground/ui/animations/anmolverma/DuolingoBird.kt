@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
@@ -54,34 +55,63 @@ fun DuolingoBird(modifier: Modifier = Modifier) {
     }
 
     val repeteableAnim = rememberInfiniteTransition()
-    val rotateRight by repeteableAnim.animateFloat(
-        initialValue = 4f, targetValue = -4f,
-        animationSpec = InfiniteRepeatableSpec(
-            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing), repeatMode = Reverse
-        )
-    )
+
     val rotateLeft by repeteableAnim.animateFloat(
-        initialValue = 4f, targetValue = -4f,
+        initialValue = 8f, targetValue = -4f,
         animationSpec = InfiniteRepeatableSpec(
-            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing), repeatMode = Reverse
+            animation = tween(durationMillis = 250, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
         )
     )
 
     val beakSpace by repeteableAnim.animateFloat(
         initialValue = 16f, targetValue = 0f,
         animationSpec = InfiniteRepeatableSpec(
-            animation = tween(durationMillis = 400, easing = LinearOutSlowInEasing), repeatMode = Reverse
+            animation = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
+            repeatMode = Reverse
         )
     )
 
     val eyeBallsMoveLeft by repeteableAnim.animateFloat(
         initialValue = -16f, targetValue = 16f, animationSpec = InfiniteRepeatableSpec(
-            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing), repeatMode = Reverse
+            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
         )
     )
     val eyeBallsMoveRight by repeteableAnim.animateFloat(
         initialValue = 16f, targetValue = -16f, animationSpec = InfiniteRepeatableSpec(
-            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing), repeatMode = Reverse
+            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
+        )
+    )
+
+    val toeRotateLeft by repeteableAnim.animateFloat(
+        initialValue = 0f,
+        targetValue = 20f, animationSpec = InfiniteRepeatableSpec(
+            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
+        )
+    )
+    val toeRotateRight by repeteableAnim.animateFloat(
+        initialValue = 0f,
+        targetValue = 30f, animationSpec = InfiniteRepeatableSpec(
+            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
+        )
+    )
+    val bodyRotateRight by repeteableAnim.animateFloat(
+        initialValue = 0f,
+        targetValue = 40f, animationSpec = InfiniteRepeatableSpec(
+            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
+        )
+    )
+
+    val bodyTranslationY by repeteableAnim.animateFloat(
+        initialValue = 0f,
+        targetValue = -40f, animationSpec = InfiniteRepeatableSpec(
+            animation = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+            repeatMode = Reverse
         )
     )
 
@@ -95,42 +125,77 @@ fun DuolingoBird(modifier: Modifier = Modifier) {
     Box(modifier = modifier
         .clickable {
             scale = if (scale == 1f) 2f else 1f
-        }.scale(scalingAnim.value)) {
-
-        BirdToes(Modifier.offset(x = 15.dp, y = (40).dp))
-        BirdToes(Modifier.offset(x = (-30).dp, y = (40).dp))
-
-        BirdHands(
-            Modifier
-                .offset(y = (-130).dp, x = (110).dp)
-                .mirror()
-                .graphicsLayer(rotationZ = rotateLeft),
-        )
-        BirdHands(
-            Modifier
-                .offset(y = (-130).dp, x = (-85).dp)
-                .graphicsLayer(rotationZ = rotateRight)
-        )
-        BirdMainShape(Modifier.offset(y = (-120).dp, x = (-80).dp))
-
-        BirdFaceEyeBG(Modifier.offset(y = -120.dp, x = -80.dp))
-
-        BirdEye(Modifier.offset(y = (-75).dp, x = -38.dp), eyeBallsMoveLeft)
-        BirdEye(Modifier.offset(y = (-75).dp, x = 25.dp), eyeBallsMoveRight)
-
-        BirdBeakTop(Modifier.offset(y = -120.dp, x = -80.dp))
-        BirdBreakBelow(
-            Modifier
-                .offset(y = -118.dp, x = -80.dp)
-                .graphicsLayer(translationY = beakSpace)
-        )
-        BirdCenterPatch(Modifier.offset(y = (-115).dp, x = (-70).dp))
-
-        BirdCenterPatch(Modifier.offset(y = (-130).dp, x = (-50).dp))
-
-        BirdCenterPatch(Modifier.offset(y = (-130).dp, x = (-90).dp))
-
+        }
+        .scale(scalingAnim.value)) {
+        BirdToes(toeRotateLeft,toeRotateRight)
+        Box(
+            modifier = Modifier.graphicsLayer(
+                rotationZ = bodyRotateRight,
+                translationY = bodyTranslationY
+            )
+        ) {
+            BirdBody(rotateLeft, 0f, eyeBallsMoveLeft, eyeBallsMoveRight, beakSpace)
+        }
     }
+}
+
+@Composable
+private fun BoxScope.BirdToes(toeRotateLeft: Float,toeRotateRight: Float) {
+    BirdToes(Modifier.rotate(toeRotateRight).offset(x = 15.dp, y = (40).dp))
+    BirdToes(
+        Modifier
+            .rotate(toeRotateLeft)
+            .offset(x = (-30).dp, y = (40).dp)
+    )
+}
+
+@Composable
+private fun BoxScope.BirdBody(
+    rotateLeft: Float,
+    rotateRight: Float,
+    eyeBallsMoveLeft: Float,
+    eyeBallsMoveRight: Float,
+    beakSpace: Float
+) {
+    BirdHands(rotateLeft, rotateRight)
+    BirdMainShape(Modifier.offset(y = (-120).dp, x = (-80).dp))
+    BirdFaceEyeBG(Modifier.offset(y = -120.dp, x = -80.dp))
+    BirdEye(Modifier.offset(y = (-75).dp, x = -38.dp), eyeBallsMoveLeft)
+    BirdEye(Modifier.offset(y = (-75).dp, x = 25.dp), eyeBallsMoveRight)
+    BirdBeak(beakSpace)
+    BirdCenterPatch()
+}
+
+@Composable
+private fun BoxScope.BirdCenterPatch() {
+    BirdCenterPatch(Modifier.offset(y = (-115).dp, x = (-70).dp))
+    BirdCenterPatch(Modifier.offset(y = (-130).dp, x = (-50).dp))
+    BirdCenterPatch(Modifier.offset(y = (-130).dp, x = (-90).dp))
+}
+
+@Composable
+private fun BoxScope.BirdBeak(beakSpace: Float) {
+    BirdBeakTop(Modifier.offset(y = -120.dp, x = -80.dp))
+    BirdBreakBelow(
+        Modifier
+            .offset(y = -118.dp, x = -80.dp)
+            .graphicsLayer(translationY = beakSpace)
+    )
+}
+
+@Composable
+private fun BoxScope.BirdHands(rotateLeft: Float, rotateRight: Float) {
+    BirdHands(
+        Modifier
+            .offset(y = (-130).dp, x = (110).dp)
+            .mirror()
+            .graphicsLayer(rotationZ = rotateLeft),
+    )
+    BirdHands(
+        Modifier
+            .offset(y = (-130).dp, x = (-85).dp)
+            .graphicsLayer(rotationZ = rotateRight)
+    )
 }
 
 @Composable
@@ -202,7 +267,7 @@ fun BoxScope.BirdEye(
         .align(Alignment.Center)
         .width(40.dp)
         .height(50.dp)
-        .scale(0.3f)
+        .scale(0.4f)
         .graphicsLayer(translationX = eyeBallsMove), onDraw = {
         drawOval(Color.Black)
     })
@@ -222,8 +287,12 @@ fun BirdFaceEyeBG(modifier: Modifier = Modifier) {
                 106 * xmul + xoff, 241 * ymul + yoff
             )
             cubicTo(
-                102.3142292989963f * xmul + xoff, 221.34255626131358f * ymul + yoff, 85 * xmul + xoff,
-                137 * ymul + yoff, 129 * xmul + xoff, 123 * ymul + yoff
+                102.3142292989963f * xmul + xoff,
+                221.34255626131358f * ymul + yoff,
+                85 * xmul + xoff,
+                137 * ymul + yoff,
+                129 * xmul + xoff,
+                123 * ymul + yoff
             )
             cubicTo(
                 133 * xmul + xoff, 143 * ymul + yoff, 121 * xmul + xoff, 90 * ymul + yoff,
@@ -234,7 +303,11 @@ fun BirdFaceEyeBG(modifier: Modifier = Modifier) {
                 160 * xmul + xoff, 110 * ymul + yoff
             )
             cubicTo(
-                158 * xmul + xoff, 64 * ymul + yoff, 179 * xmul + xoff, 73 * ymul + yoff, 169 * xmul + xoff,
+                158 * xmul + xoff,
+                64 * ymul + yoff,
+                179 * xmul + xoff,
+                73 * ymul + yoff,
+                169 * xmul + xoff,
                 77 * ymul + yoff
             )
             cubicTo(
@@ -250,7 +323,11 @@ fun BirdFaceEyeBG(modifier: Modifier = Modifier) {
                 357 * xmul + xoff, 110 * ymul + yoff
             )
             cubicTo(
-                369 * xmul + xoff, 79 * ymul + yoff, 395 * xmul + xoff, 91 * ymul + yoff, 375 * xmul + xoff,
+                369 * xmul + xoff,
+                79 * ymul + yoff,
+                395 * xmul + xoff,
+                91 * ymul + yoff,
+                375 * xmul + xoff,
                 91 * ymul + yoff
             )
             cubicTo(
@@ -308,7 +385,11 @@ fun BirdMainShape(modifier: Modifier = Modifier) {
             val yoff = 1f
             lineTo(83 * xmul + xoff, 132 * ymul + yoff);
             cubicTo(
-                84 * xmul + xoff, 121 * ymul + yoff, 59 * xmul + xoff, 383 * ymul + yoff, 141 * xmul + xoff,
+                84 * xmul + xoff,
+                121 * ymul + yoff,
+                59 * xmul + xoff,
+                383 * ymul + yoff,
+                141 * xmul + xoff,
                 411 * ymul + yoff
             )
             cubicTo(
@@ -316,23 +397,43 @@ fun BirdMainShape(modifier: Modifier = Modifier) {
                 395 * xmul + xoff, 391 * ymul + yoff
             )
             cubicTo(
-                405.5820258211916f * xmul + xoff, 374.0288265131832f * ymul + yoff, 439 * xmul + xoff,
-                282 * ymul + yoff, 429 * xmul + xoff, 133 * ymul + yoff
+                405.5820258211916f * xmul + xoff,
+                374.0288265131832f * ymul + yoff,
+                439 * xmul + xoff,
+                282 * ymul + yoff,
+                429 * xmul + xoff,
+                133 * ymul + yoff
             )
             cubicTo(
-                437 * xmul + xoff, 29 * ymul + yoff, 353 * xmul + xoff, 44 * ymul + yoff, 335 * xmul + xoff,
+                437 * xmul + xoff,
+                29 * ymul + yoff,
+                353 * xmul + xoff,
+                44 * ymul + yoff,
+                335 * xmul + xoff,
                 57 * ymul + yoff
             )
             cubicTo(
-                318.7864154320024f * xmul + xoff, 68.70981107688718f * ymul + yoff, 278 * xmul + xoff,
-                82 * ymul + yoff, 258 * xmul + xoff, 82 * ymul + yoff
+                318.7864154320024f * xmul + xoff,
+                68.70981107688718f * ymul + yoff,
+                278 * xmul + xoff,
+                82 * ymul + yoff,
+                258 * xmul + xoff,
+                82 * ymul + yoff
             )
             cubicTo(
-                234 * xmul + xoff, 93 * ymul + yoff, 163 * xmul + xoff, 33 * ymul + yoff, 124 * xmul + xoff,
+                234 * xmul + xoff,
+                93 * ymul + yoff,
+                163 * xmul + xoff,
+                33 * ymul + yoff,
+                124 * xmul + xoff,
                 48 * ymul + yoff
             )
             cubicTo(
-                49 * xmul + xoff, 88 * ymul + yoff, 102 * xmul + xoff, 145 * ymul + yoff, 83 * xmul + xoff,
+                49 * xmul + xoff,
+                88 * ymul + yoff,
+                102 * xmul + xoff,
+                145 * ymul + yoff,
+                83 * xmul + xoff,
                 132 * ymul + yoff
             )
             drawPath(this, birdGreen)
@@ -365,7 +466,7 @@ fun BirdHands(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BirdToes(modifier: Modifier = Modifier) {
+fun BoxScope.BirdToes(modifier: Modifier = Modifier) {
     Canvas(modifier = modifier
         .width(40.dp)
         .height(20.dp), onDraw = {
