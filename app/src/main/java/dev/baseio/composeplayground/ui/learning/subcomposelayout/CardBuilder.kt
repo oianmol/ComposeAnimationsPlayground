@@ -21,7 +21,7 @@ import androidx.compose.ui.util.fastMaxBy
 fun CardBuilder(
     image: @Composable @UiComposable () -> Unit,
     title: @Composable @UiComposable () -> Unit,
-    subtitle: @Composable @UiComposable () -> Unit,
+    subtitle: @Composable @UiComposable (Int) -> Unit,
 ) {
     SubcomposeLayout { constraints ->
         val layoutWidth = constraints.maxWidth
@@ -33,6 +33,7 @@ fun CardBuilder(
                 it.measure(looseConstraints)
             }
             val imageHeight = imagePlaceable.fastMaxBy { it.height }?.height ?: 0
+            val maxImageWidth = imagePlaceable.fastMaxBy { it.width }?.width ?: 0
 
             val titlePlaceable = subcompose(CardBuilderLayoutContent.Title, title).fastMap {
                 it.measure(looseConstraints)
@@ -40,7 +41,9 @@ fun CardBuilder(
             val titleHeight = titlePlaceable.fastMaxBy { it.height }?.height ?: 0
 
             val subTitlePlaceable =
-                subcompose(CardBuilderLayoutContent.SubTitle, subtitle).fastMap {
+                subcompose(CardBuilderLayoutContent.SubTitle) {
+                    subtitle(maxImageWidth)
+                }.fastMap {
                     it.measure(looseConstraints)
                 }
             val subTitleHeight = subTitlePlaceable.fastMaxBy { it.height }?.height ?: 0
@@ -48,12 +51,11 @@ fun CardBuilder(
                 it.place(0, 0)
             }
             titlePlaceable.fastForEach {
-                it.place(0, imageHeight)
+                it.place(0, imageHeight - titleHeight - subTitleHeight)
             }
             subTitlePlaceable.fastForEach {
-                it.place(0, imageHeight + titleHeight)
+                it.place(0, imageHeight - subTitleHeight)
             }
-
         }
     }
 }
@@ -80,7 +82,10 @@ fun PreviewCardBuilder() {
             }, title = {
                 Text(text = "Title")
             }, subtitle = {
-                Text(text = "SubTitle")
+                Text(
+                    text = "SubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitleSubTitle",
+                    Modifier.width(it.dp)
+                )
             })
         }
     }
