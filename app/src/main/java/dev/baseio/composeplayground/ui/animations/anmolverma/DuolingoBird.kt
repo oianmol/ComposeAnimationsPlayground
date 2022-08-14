@@ -11,6 +11,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -124,9 +125,8 @@ fun DuolingoBird(modifier: Modifier = Modifier) {
 
     Box(modifier = modifier
         .clickable {
-            scale = if (scale == 1f) 2f else 1f
-        }
-        .scale(scalingAnim.value)) {
+            scale = if (scale == 1f) 56f else 1f
+        }.graphicsLayer(translationY = scalingAnim.value)) {
         BirdToes(toeRotateLeft,toeRotateRight)
         Box(
             modifier = Modifier.graphicsLayer(
@@ -478,8 +478,8 @@ fun BoxScope.BirdToes(modifier: Modifier = Modifier) {
 @Composable
 fun PreviewDuolingoBird() {
     MaterialTheme {
-        Surface(Modifier.fillMaxSize()) {
-            Box(modifier = Modifier) {
+        Surface(Modifier.background(Color.Black).fillMaxSize()) {
+            Box(modifier = Modifier.background(Color.Black)) {
                 DuolingoBird(Modifier.align(Alignment.Center))
             }
         }
