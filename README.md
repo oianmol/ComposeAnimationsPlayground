@@ -2,6 +2,9 @@
 
 ## Animations
 
+Duolingo Owl - Anmol Verma
+
+https://user-images.githubusercontent.com/4393101/184520116-244a92d5-95c6-4da6-ba28-c755ca63ec1c.mov
 
 Netflix Animation - Anmol Verma
 
