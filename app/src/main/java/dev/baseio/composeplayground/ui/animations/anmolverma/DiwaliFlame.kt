@@ -26,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+// Inspired by https://codepen.io/oianmol/pen/oNyvZPx
+
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DiwaliFlame() {
