@@ -98,10 +98,10 @@ class MainActivity : ComponentActivity() {
             ShootingStarsAnimation()
           }
           0 -> {
-            GoogleIO()
+            NetflixIntroAnimation()
           }
           17 -> {
-            NetflixIntroAnimation()
+            GoogleIO()
           }
           11 -> {
             Box(modifier = Modifier.fillMaxSize()) {
