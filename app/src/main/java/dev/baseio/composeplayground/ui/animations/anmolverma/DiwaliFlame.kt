@@ -1,11 +1,8 @@
 package dev.baseio.composeplayground.ui.animations.anmolverma
 
-import android.graphics.*
 import android.graphics.RenderEffect
-import android.graphics.Shader
 import android.graphics.Shader.TileMode
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,24 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.NightSky
 
 // Inspired by https://codepen.io/oianmol/pen/oNyvZPx
-
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DiwaliFlame() {
     Box(
