@@ -22,10 +22,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import dev.baseio.composeplayground.ui.animations.*
-import dev.baseio.composeplayground.ui.animations.anmolverma.BellAnimation
-import dev.baseio.composeplayground.ui.animations.anmolverma.GramophoneDisc
-import dev.baseio.composeplayground.ui.animations.anmolverma.ShootingStarsAnimation
-import dev.baseio.composeplayground.ui.animations.anmolverma.SlackAnimation
+import dev.baseio.composeplayground.ui.animations.anmolverma.*
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.GoogleIO
 import dev.baseio.composeplayground.ui.animations.anmolverma.planetarysystem.PlanetarySystem
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.PullToRefreshOne
@@ -130,7 +127,7 @@ class MainActivity : ComponentActivity() {
             SlackAnimation()
           }
           2 -> {
-            GramophoneDisc()
+            DiwaliFlame()
           }
           14 -> {
             Box(Modifier.fillMaxSize()) {

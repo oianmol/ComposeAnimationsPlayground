@@ -22,11 +22,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.NightSky
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DiwaliFlame() {
     Box(
@@ -35,7 +37,7 @@ fun DiwaliFlame() {
             .background(Color.Black)
             .layoutId("root")
     ) {
-        Container(Modifier.align(Alignment.Center)) {
+        Container(Modifier.align(Alignment.Center).offset(x = 30.dp)) {
             flames.forEach { flameInfo ->
                 if (flameInfo.isCircle) {
                     Circle(
@@ -53,7 +55,6 @@ fun DiwaliFlame() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BoxScope.Circle(modifier: Modifier, flameInfo: FlameInfo) {
     Box(
@@ -64,24 +65,27 @@ fun BoxScope.Circle(modifier: Modifier, flameInfo: FlameInfo) {
                 scaleX = 1.5f
                 scaleY = 1.5f
                 transformOrigin = TransformOrigin(0.5f, 1f)
-                renderEffect = RenderEffect
-                    .createBlurEffect(flameInfo.blur, flameInfo.blur, TileMode.DECAL)
-                    .asComposeRenderEffect()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    renderEffect = RenderEffect
+                        .createBlurEffect(flameInfo.blur, flameInfo.blur, TileMode.DECAL)
+                        .asComposeRenderEffect()
+                }
             }
 
     ){
-        Box(modifier = Modifier.size(flameInfo.size).background(
-            flameInfo.bg, RoundedCornerShape(
-                bottomEndPercent = 50,
-                bottomStartPercent = 50,
-                topStartPercent = 50
-            )
-        ))
+        Box(modifier = Modifier
+            .size(flameInfo.size)
+            .background(
+                flameInfo.bg, RoundedCornerShape(
+                    bottomEndPercent = 50,
+                    bottomStartPercent = 50,
+                    topStartPercent = 50
+                )
+            ))
     }
 
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BoxScope.Flame(modifier: Modifier, flameInfo: FlameInfo) {
     Box(
@@ -91,18 +95,22 @@ fun BoxScope.Flame(modifier: Modifier, flameInfo: FlameInfo) {
                 scaleX = 1.5f
                 scaleY = 1.5f
                 transformOrigin = TransformOrigin(0.5f, 1f)
-                renderEffect = RenderEffect
-                    .createBlurEffect(flameInfo.blur, flameInfo.blur, TileMode.DECAL)
-                    .asComposeRenderEffect()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    renderEffect = RenderEffect
+                        .createBlurEffect(flameInfo.blur, flameInfo.blur, TileMode.DECAL)
+                        .asComposeRenderEffect()
+                }
             }
     ){
-        Box(modifier = Modifier.size(flameInfo.size).background(
-            flameInfo.bg, RoundedCornerShape(
-                bottomEndPercent = 50,
-                bottomStartPercent = 50,
-                topStartPercent = 50
-            )
-        ))
+        Box(modifier = Modifier
+            .size(flameInfo.size)
+            .background(
+                flameInfo.bg, RoundedCornerShape(
+                    bottomEndPercent = 50,
+                    bottomStartPercent = 50,
+                    topStartPercent = 50
+                )
+            ))
     }
 }
 
