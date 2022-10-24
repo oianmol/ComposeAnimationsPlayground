@@ -29,6 +29,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.baseio.composeplayground.ui.animations.anmolverma.pulltorefresh.NightSky
 
+// Inspired by https://codepen.io/oianmol/pen/oNyvZPx
+
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DiwaliFlame() {
     Box(
