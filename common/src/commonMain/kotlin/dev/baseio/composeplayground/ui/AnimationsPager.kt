@@ -54,9 +54,7 @@ fun AnimationsPager(modifier: Modifier) {
 val animations = mutableListOf<@Composable () -> Unit>().apply {
 
     add {
-        Box(modifier = Modifier.fillMaxSize()) {
-            IOSSleepSchedule()
-        }
+        IOSSleepSchedule()
     }
     add{
         LoadingPreviewView(Modifier.fillMaxSize())
