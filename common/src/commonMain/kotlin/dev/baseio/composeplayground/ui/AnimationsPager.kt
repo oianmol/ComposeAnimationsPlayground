@@ -52,6 +52,7 @@ fun AnimationsPager(modifier: Modifier) {
 }
 
 val animations = mutableListOf<@Composable () -> Unit>().apply {
+
     add {
         Box(modifier = Modifier.fillMaxSize()) {
             IOSSleepSchedule()
@@ -137,4 +138,5 @@ val animations = mutableListOf<@Composable () -> Unit>().apply {
             DuolingoBird(Modifier.align(Alignment.Center))
         }
     }
+
 }

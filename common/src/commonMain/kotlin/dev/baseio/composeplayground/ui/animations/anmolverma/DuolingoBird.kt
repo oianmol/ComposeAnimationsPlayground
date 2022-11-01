@@ -13,12 +13,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -47,12 +42,12 @@ val birdBeakBelow = Color(230, 149, 53)
 @Composable
 fun DuolingoBird(modifier: Modifier = Modifier) {
 
-    var scale by remember {
+    var translation by remember {
         mutableStateOf(1f)
     }
 
-    val scalingAnim = remember {
-        Animatable(scale)
+    val translationAnim = remember {
+        Animatable(translation)
     }
 
     val repeteableAnim = rememberInfiniteTransition()
@@ -116,19 +111,23 @@ fun DuolingoBird(modifier: Modifier = Modifier) {
         )
     )
 
-    LaunchedEffect(key1 = scale, block = {
-        scalingAnim.animateTo(
-            scale,
+    LaunchedEffect(key1 = translation, block = {
+        translationAnim.animateTo(
+            translation,
             spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessLow)
         )
     })
 
-    Box(modifier = modifier
-        .clickable {
-            scale = if (scale == 1f) 56f else 1f
-        }.graphicsLayer(translationY = scalingAnim.value)
+    Box(
+        modifier = modifier
+            .clickable {
+                translation = if (translation == 1f) 56f else 1f
+            }.graphicsLayer(translationY = translationAnim.value)
     ) {
-        BirdToes(toeRotateLeft, toeRotateRight)
+        Box(Modifier.align(Alignment.BottomCenter)) {
+            BirdToes(toeRotateLeft, toeRotateRight)
+        }
+
         Box(
             modifier = Modifier.graphicsLayer(
                 rotationZ = bodyRotateRight,
@@ -137,16 +136,17 @@ fun DuolingoBird(modifier: Modifier = Modifier) {
         ) {
             BirdBody(rotateLeft, 0f, eyeBallsMoveLeft, eyeBallsMoveRight, beakSpace)
         }
+
     }
 }
 
 @Composable
-private fun BoxScope.BirdToes(toeRotateLeft: Float, toeRotateRight: Float) {
-    BirdToes(Modifier.rotate(toeRotateRight).offset(x = 15.dp, y = (40).dp))
-    BirdToes(
+private fun BirdToes(toeRotateLeft: Float, toeRotateRight: Float) {
+    BirdToe(Modifier.rotate(toeRotateRight).offset(x = 15.dp, y = (10).dp))
+    BirdToe(
         Modifier
             .rotate(toeRotateLeft)
-            .offset(x = (-30).dp, y = (40).dp)
+            .offset(x = (-30).dp, y = (10).dp)
     )
 }
 
@@ -161,21 +161,21 @@ private fun BoxScope.BirdBody(
     BirdHands(rotateLeft, rotateRight)
     BirdMainShape(Modifier.offset(y = (-120).dp, x = (-80).dp))
     BirdFaceEyeBG(Modifier.offset(y = -120.dp, x = -80.dp))
-    BirdEye(Modifier.offset(y = (-75).dp, x = -38.dp), eyeBallsMoveLeft)
-    BirdEye(Modifier.offset(y = (-75).dp, x = 25.dp), eyeBallsMoveRight)
+    BirdEye(Modifier.offset(y = (-90).dp, x = -50.dp), eyeBallsMoveLeft)
+    BirdEye(Modifier.offset(y = (-90).dp, x = -5.dp), eyeBallsMoveRight)
     BirdBeak(beakSpace)
     BirdCenterPatch()
 }
 
 @Composable
-private fun BoxScope.BirdCenterPatch() {
+private fun BirdCenterPatch() {
     BirdCenterPatch(Modifier.offset(y = (-115).dp, x = (-70).dp))
     BirdCenterPatch(Modifier.offset(y = (-130).dp, x = (-50).dp))
     BirdCenterPatch(Modifier.offset(y = (-130).dp, x = (-90).dp))
 }
 
 @Composable
-private fun BoxScope.BirdBeak(beakSpace: Float) {
+private fun BirdBeak(beakSpace: Float) {
     BirdBeakTop(Modifier.offset(y = -120.dp, x = -80.dp))
     BirdBreakBelow(
         Modifier
@@ -237,11 +237,13 @@ fun BirdBreakBelow(modifier: Modifier = Modifier) {
             lineTo(255 * xmul + xoff, 248 * ymul + yoff);
             lineTo(232 * xmul + xoff, 242 * ymul + yoff);
             cubicTo(
-                233 * xmul + xoff, 244 * ymul + yoff, 226 * xmul + xoff, 265 * ymul + yoff,
+                233 * xmul + xoff, 244 * ymul + yoff,
+                226 * xmul + xoff, 265 * ymul + yoff,
                 255 * xmul + xoff, 271 * ymul + yoff
             )
             cubicTo(
-                276 * xmul + xoff, 273 * ymul + yoff, 280 * xmul + xoff, 246 * ymul + yoff,
+                276 * xmul + xoff, 273 * ymul + yoff,
+                280 * xmul + xoff, 246 * ymul + yoff,
                 282 * xmul + xoff, 246 * ymul + yoff
             )
 
@@ -467,7 +469,7 @@ fun BirdHands(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BoxScope.BirdToes(modifier: Modifier = Modifier) {
+fun BirdToe(modifier: Modifier = Modifier) {
     Canvas(modifier = modifier
         .width(40.dp)
         .height(20.dp), onDraw = {
