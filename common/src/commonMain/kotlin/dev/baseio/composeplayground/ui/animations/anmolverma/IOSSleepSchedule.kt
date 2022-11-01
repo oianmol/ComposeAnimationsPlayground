@@ -34,6 +34,9 @@ import dev.baseio.composeplayground.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import kotlin.math.*
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
 
 
 const val DEGREE_IN_HOUR = 15f
@@ -57,11 +60,11 @@ fun IOSSleepSchedule() {
     }
 
     var startTime by remember {
-        mutableStateOf(LocalDateTime(now, LocalTime(6, 0)))
+        mutableStateOf(LocalDateTime(now, LocalTime(22, 0)))
     }
 
     var endTime by remember {
-        mutableStateOf(LocalDateTime(now, LocalTime(11, 0)))
+        mutableStateOf(LocalDateTime(now.plus(1, DateTimeUnit.DAY), LocalTime(8, 0)))
     }
 
     when (windowSize) {
@@ -145,18 +148,11 @@ private fun TouchMoveControlTrack(
     endTimeUpdateInvoker: (LocalDateTime) -> Unit
 ) {
 
-    var updatedStartTime by remember {
-        mutableStateOf(sTime)
-    }
-    var updatedEndTime by remember {
-        mutableStateOf(enTime)
-    }
-
     var startIconAngle by remember {
-        mutableStateOf(convertTimeToAngle(updatedStartTime))
+        mutableStateOf(convertTimeToAngle(sTime))
     }
     var endIconAngle by remember {
-        mutableStateOf(convertTimeToAngle(updatedEndTime))
+        mutableStateOf(convertTimeToAngle(enTime))
     }
 
     var shapeCenter by remember {
@@ -203,66 +199,41 @@ private fun TouchMoveControlTrack(
             .align(Alignment.Center)
             .pointerInput(Unit) {
                 constraintsScope.launch {
+                    var userTapStartAngle: Float? = null
                     detectDragGestures(
                         onDragEnd = {
+
                         },
                         onDragStart = { offset ->
+                            userTapStartAngle = getAngleAtOffset(offset, shapeCenter)
                         },
                         onDrag = { change, _ ->
-                            val angleAtStartTime = convertTimeToAngle(sTime)
                             val angleAtUsersFinger = getAngleAtOffset(change.position, shapeCenter)
                             val timeAtUsersFinger = convertAngleToLocalDateTime(angleAtUsersFinger)
-                            println("angleAtStartTime $angleAtStartTime angleAtUsersFinger $angleAtUsersFinger")
-                            val elapsedTime = timeAtUsersFinger.toInstant(TimeZone.currentSystemDefault())
-                                .minus(sTime.toInstant(TimeZone.currentSystemDefault()))
+                            println("angleAtUsersFinger $angleAtUsersFinger")
+                            val elapsedTime = elapsedTime(timeAtUsersFinger, sTime)
                             println("elapsedTime $elapsedTime")
-                            val newStartTime =
-                                updatedStartTime.toInstant(TimeZone.currentSystemDefault()).plus(elapsedTime)
+                            var newStartTime =
+                                sTime.toInstant(TimeZone.currentSystemDefault()).plus(elapsedTime)
                                     .toLocalDateTime(TimeZone.currentSystemDefault())
-                            val newEndTime = updatedEndTime.toInstant(TimeZone.currentSystemDefault()).plus(elapsedTime)
+                            var newEndTime = enTime.toInstant(TimeZone.currentSystemDefault()).plus(elapsedTime)
                                 .toLocalDateTime(TimeZone.currentSystemDefault())
+
+                            if (newEndTime.date.dayOfMonth > newStartTime.date.dayOfMonth) {
+                                newStartTime = newStartTime.toInstant(TimeZone.currentSystemDefault()).minus(
+                                    1,
+                                    DateTimeUnit.DAY, TimeZone.currentSystemDefault()
+                                ).toLocalDateTime(TimeZone.currentSystemDefault())
+                                newEndTime = newEndTime.toInstant(TimeZone.currentSystemDefault()).minus(
+                                    1,
+                                    DateTimeUnit.DAY, TimeZone.currentSystemDefault()
+                                ).toLocalDateTime(TimeZone.currentSystemDefault())
+                            }
+
                             startTimeUpdateInvoker.invoke(newStartTime)
                             endTimeUpdateInvoker.invoke(newEndTime)
-                            println("updatedStartTime $updatedStartTime")
-                            println("updatedEndTime $updatedEndTime")
-
-                            //startTimeUpdateInvoker.invoke(updatedStartTime)
-                            //endTimeUpdateInvoker.invoke(updatedEndTime)
-
-                            /*
-                             val angleEndTime = convertTimeToAngle(enTime)
-                                    val angleStartTime = convertTimeToAngle(sTime)
-                                    updatedStartTime =
-                                    updatedEndTime =
-                                    startTimeUpdateInvoker.invoke(updatedStartTime)
-                                    endTimeUpdateInvoker.invoke(updatedEndTime)*/
-
-                            /* val angleTouchStarted = convertTimeToAngle(timeAtTouchScroll!!)
-                             val angleSweepedAfterMove = startAngleKnob.minus(angleTouchStarted)
-                             // TODO fix this check so we can calculate the correct startAngle for knob
-                             startAngleKnob = (convertTimeToAngle(updatedStartTime) + angleSweepedAfterMove)
-                             val endingAngleKnob: Float = startAngleKnob
-                                 .plus(convertHourToAngle(updatedStartTime, updatedEndTime))
-                                 .adjustWhenLessThanZero()
-                             val startTimeCalc = convertAngleToLocalDateTime(startAngleKnob)
-                             var endTimeCalc = convertAngleToLocalDateTime(endingAngleKnob)
-
-                             val amPmEndTime = if (endTimeCalc.hour > 12) "pm" else "am"
-                             val amPmStartTime = if (startTimeCalc.hour > 12) "pm" else "am"
-                             if (amPmEndTime.equals("am", ignoreCase = true)) {
-                                 if (!amPmStartTime.equals("am", ignoreCase = true)) {
-                                     endTimeCalc = endTimeCalc.toInstant(TimeZone.currentSystemDefault()).plus(
-                                         1, DateTimeUnit.DAY,
-                                         TimeZone.currentSystemDefault()
-                                     ).toLocalDateTime(TimeZone.currentSystemDefault())
-                                 }
-                             }
-
-                             updatedStartTime = startTimeCalc
-                             updatedEndTime = endTimeCalc
-                             startTimeUpdateInvoker.invoke(updatedStartTime)
-                             endTimeUpdateInvoker.invoke(updatedEndTime)*/
-
+                            println("updatedStartTime $newStartTime")
+                            println("updatedEndTime $newEndTime")
 
                             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             change.consumeAllChanges()
@@ -274,7 +245,7 @@ private fun TouchMoveControlTrack(
             radius = size.minDimension / 2
             startIconAngle = convertTimeToAngle(sTime)
             endIconAngle = convertTimeToAngle(enTime)
-            val sweepAngle = getSweepAngle(updatedStartTime, updatedEndTime, endIconAngle, startIconAngle)
+            val sweepAngle = getSweepAngle(sTime, enTime, endIconAngle, startIconAngle)
             drawRotatingKnob(
                 startIconAngle,
                 knobStrokeWidth,
@@ -282,7 +253,7 @@ private fun TouchMoveControlTrack(
             )
         })
 
-        val sweepAngle = getSweepAngle(updatedStartTime, updatedEndTime, endIconAngle, startIconAngle)
+        val sweepAngle = getSweepAngle(sTime, enTime, endIconAngle, startIconAngle)
 
         DrawHandleLinesOnTheKnob(
             clockRadiusDp,
@@ -294,6 +265,16 @@ private fun TouchMoveControlTrack(
         StartEndIcon(reduceOffsetIcon, shapeCenter, startIconAngle, radius, endIconAngle, clockSize)
     }
 
+}
+
+private fun elapsedTime(
+    timeAtUsersFinger: LocalDateTime,
+    sTime: LocalDateTime
+): Duration {
+    val timeAtUsersFingerInstant = timeAtUsersFinger.toInstant(TimeZone.currentSystemDefault())
+    val sTimeInstant = sTime.toInstant(TimeZone.currentSystemDefault())
+    val millisUntil = sTimeInstant.until(timeAtUsersFingerInstant, DateTimeUnit.MILLISECOND)
+    return millisUntil.milliseconds
 }
 
 @Composable
@@ -343,11 +324,20 @@ private fun getSweepAngle(
     endTimeValue: LocalDateTime,
     endIconAngle: Float,
     startIconAngle: Float
-) = if (startTimeValue.dayOfMonth < endTimeValue.dayOfMonth) {
-    // adjust the sweepAngle
-    endIconAngle.plus(360.minus(startIconAngle))
-} else {
-    endIconAngle.minus(startIconAngle)
+): Float {
+    when {
+        startTimeValue.dayOfMonth < endTimeValue.dayOfMonth -> {
+            // adjust the sweepAngle
+            return endIconAngle.plus(360.minus(startIconAngle))
+        }
+        else -> {
+            val result = endIconAngle.minus(startIconAngle)
+            if (result < 0) {
+                return (360.minus(startIconAngle)).plus(endIconAngle)
+            }
+            return result
+        }
+    }
 }
 
 fun Float.asCanvasArcStartAngle(): Float {
