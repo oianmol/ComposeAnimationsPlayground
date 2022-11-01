@@ -25,6 +25,8 @@ import platform.UIKit.UIInterfaceOrientationMask
 import platform.UIKit.UIInterfaceOrientationMaskAll
 import platform.UIKit.UIScreen
 import platform.UIKit.UIApplicationMain
+import dev.baseio.common.App
+import dev.baseio.common.WindowInfo
 
 fun main() {
     val args = emptyArray<String>()
@@ -60,25 +62,17 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
     override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
         window!!.rootViewController = Application("ComposeAnimationsPlayground") {
-            SlackCloneTheme(isDarkTheme = true) {
-                Column {
-                    App()
+
+            val rememberedComposeWindow by remember(window!!) {
+                val windowInfo = window!!.frame.useContents {
+                    WindowInfo(this.size.width.dp, this.size.height.dp)
                 }
+                mutableStateOf(windowInfo)
             }
+
+            App(rememberedComposeWindow)
         }
         window!!.makeKeyAndVisible()
         return true
-    }
-
-    override fun applicationDidBecomeActive(application: UIApplication) {
-        lifecycle.resume()
-    }
-
-    override fun applicationWillResignActive(application: UIApplication) {
-        lifecycle.stop()
-    }
-
-    override fun applicationWillTerminate(application: UIApplication) {
-        lifecycle.destroy()
     }
 }
