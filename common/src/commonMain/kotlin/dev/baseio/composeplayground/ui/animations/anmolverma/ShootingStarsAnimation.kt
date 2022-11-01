@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -116,7 +117,6 @@ private fun StarTrail(
       modifier = Modifier
         .height(2.dp)
         .width(tailWidth.dp)
-
         .background(
           Brush.linearGradient(
             colors = listOf(
@@ -124,7 +124,7 @@ private fun StarTrail(
               Color(0xff5F91FF),
             )
           )
-        )
+        ).blur(12.dp)
     )
 
 
@@ -144,7 +144,7 @@ private fun StarTrail(
                 Color(0xff0000FF),
               )
             )
-          )
+          ).blur(12.dp)
       )
 
       Box(
@@ -162,7 +162,7 @@ private fun StarTrail(
                 Color(0xff0000FF),
               )
             )
-          )
+          ).blur(12.dp)
       )
     }
 

@@ -54,4 +54,43 @@ expect object PainterRes {
 
     @Composable
     fun ic_notification_bell(): Painter
+
+    @Composable
+    fun applewall(): Painter
+
+    @Composable
+    fun keychain(): Painter
+
+    @Composable
+    fun news(): Painter
+
+    @Composable
+    fun safari(): Painter
+
+    @Composable
+    fun timemachine(): Painter
+
+    @Composable
+    fun systempreferences(): Painter
+
+    @Composable
+    fun colorsync(): Painter
+
+    @Composable
+    fun migration(): Painter
+
+    @Composable
+    fun quicktime(): Painter
+
+    @Composable
+    fun contacts(): Painter
+
+    @Composable
+    fun dictionary(): Painter
+
+    @Composable
+    fun music(): Painter
+
+    @Composable
+    fun stocks(): Painter
 }
