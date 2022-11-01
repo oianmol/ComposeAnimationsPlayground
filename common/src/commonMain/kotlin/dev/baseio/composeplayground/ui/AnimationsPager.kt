@@ -59,7 +59,7 @@ val animations = mutableListOf<@Composable () -> Unit>().apply {
         }
     }
     add{
-        LoadingPreviewView(Modifier.fillMaxSize().background(Color.White))
+        LoadingPreviewView(Modifier.fillMaxSize())
     }
     add {
         PullToRefreshOne()

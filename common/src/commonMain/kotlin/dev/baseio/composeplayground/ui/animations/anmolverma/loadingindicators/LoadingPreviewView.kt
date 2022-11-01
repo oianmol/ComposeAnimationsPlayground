@@ -1,5 +1,6 @@
 package dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +23,7 @@ import dev.baseio.composeplayground.ui.theme.Typography
 @Composable
 fun LoadingPreviewView(modifier: Modifier) {
     Column(
-        modifier
+        modifier.background(MaterialTheme.colors.background)
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
@@ -36,12 +38,12 @@ fun LoadingPreviewView(modifier: Modifier) {
                 Column {
                     Text(
                         text = "Sizes",
-                        style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold, color = Color.Black)
+                        style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onBackground)
                     )
                     Size.values().forEach { size ->
                         Column(
                             Modifier
-                                .border(1.dp, Color.Black)
+                                .border(1.dp, MaterialTheme.colors.onBackground)
                                 .padding(8.dp)
                         ) {
                             LoadingIndicator(loadingAnim, size.factor, Speed.normal.factor)
@@ -52,16 +54,16 @@ fun LoadingPreviewView(modifier: Modifier) {
                 Divider(Modifier.padding(vertical = 12.dp))
                 Text(
                     text = "Speeds",
-                    style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold, color = Color.Black)
+                    style = Typography.subtitle1.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onBackground)
                 )
                 Speed.values().forEach { speed ->
                     Column(
                         Modifier
-                            .border(1.dp, Color.Black)
+                            .border(1.dp, MaterialTheme.colors.onBackground)
                             .padding(8.dp)
                     ) {
                         LoadingIndicator(loadingAnim, Size.medium.factor, speed.factor)
-                        Text(speed.toString(), style = Typography.caption.copy(color = Color.Black))
+                        Text(speed.toString(), style = Typography.caption.copy(color = MaterialTheme.colors.onBackground))
                     }
                 }
             }

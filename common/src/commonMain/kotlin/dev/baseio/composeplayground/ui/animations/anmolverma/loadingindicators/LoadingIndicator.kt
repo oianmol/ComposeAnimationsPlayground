@@ -1,5 +1,6 @@
 package dev.baseio.composeplayground.ui.animations.anmolverma.loadingindicators
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -7,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 fun LoadingIndicator(
     animation: LoadingAnimation,
     size: Int,
-    speed: Double, color: Color = Color.Black
+    speed: Double, color: Color = MaterialTheme.colors.onBackground
 ) {
     when (animation) {
         LoadingAnimation.threeBalls -> LoadingThreeBalls(color = color, size = size, speed = speed)
