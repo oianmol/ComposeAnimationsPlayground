@@ -55,4 +55,56 @@ actual object PainterRes {
 
     @Composable
     actual fun airplane(): Painter = painterResource("images/airplane.png")
+
+    @Composable
+    actual fun applewall(): Painter = painterResource("images/applewall.jpeg")
+
+
+    @Composable
+    actual fun keychain(): Painter = painterResource("images/keychain.png")
+
+
+    @Composable
+    actual fun news(): Painter = painterResource("images/news.png")
+
+
+    @Composable
+    actual fun safari(): Painter = painterResource("images/safari.png")
+
+
+    @Composable
+    actual fun timemachine(): Painter = painterResource("images/timemachine.png")
+
+
+    @Composable
+    actual fun systempreferences(): Painter = painterResource("images/systempreferences.png")
+
+
+    @Composable
+    actual fun colorsync(): Painter = painterResource("images/colorsync.png")
+
+
+    @Composable
+    actual fun migration(): Painter = painterResource("images/migration.png")
+
+
+    @Composable
+    actual fun quicktime(): Painter = painterResource("images/quicktime.png")
+
+
+    @Composable
+    actual fun contacts(): Painter = painterResource("images/contacts.png")
+
+
+    @Composable
+    actual fun dictionary(): Painter = painterResource("images/dictionary.png")
+
+
+    @Composable
+    actual fun music(): Painter = painterResource("images/music.png")
+
+
+    @Composable
+    actual fun stocks(): Painter = painterResource("images/stocks.png")
 }
+    

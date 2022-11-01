@@ -1,4 +1,3 @@
-/*
 package dev.baseio.composeplayground.ui.animations.anmolverma
 
 import androidx.compose.animation.core.animateDpAsState
@@ -15,18 +14,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import dev.baseio.common.PainterRes
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -38,7 +41,7 @@ fun MacOsxDock() {
             .background(Color.Black)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.applewall),
+            painter = PainterRes.applewall(),
             contentDescription = null,
             Modifier.fillMaxSize(), contentScale = ContentScale.Crop
         )
@@ -54,6 +57,7 @@ private fun BoxScope.DockBox() {
     IconsRow()
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun BoxScope.IconsRow() {
     var canAcceptTouchScroll by remember {
@@ -79,77 +83,90 @@ private fun BoxScope.IconsRow() {
             .align(Alignment.BottomCenter)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
         userScrollEnabled = canAcceptTouchScroll
     ) {
         itemsIndexed(icons) { index, item ->
-            DockIcon(item, Modifier.pointerInput(Unit) {
-                detectDragGesturesAfterLongPress(
-                    onDragStart = {
-                        indexSelected = index
-                        canAcceptTouchScroll = false
-                        item.shouldAnimate = true
-                        item.onAnimateRequested()
-                        swipeOffset = it.x
-                    },
-                    onDragEnd = {
-                        canAcceptTouchScroll = true
+            DockIcon(item, Modifier
+                .onPointerEvent(PointerEventType.Enter) {
+                    indexSelected = index
+                    item.shouldAnimate = true
+                    item.onAnimateRequested()
+                }
+                .onPointerEvent(PointerEventType.Exit) {
+                    indexSelected = 0
+                    item.shouldAnimate = false
+                    item.onAnimateRequested()
+                }
+                .pointerInput(Unit) {
+                    detectDragGesturesAfterLongPress(
+                        onDragStart = {
+                            indexSelected = index
+                            canAcceptTouchScroll = false
+                            item.shouldAnimate = true
+                            item.onAnimateRequested()
+                            swipeOffset = it.x
+                        },
+                        onDragEnd = {
+                            canAcceptTouchScroll = true
 
-                        disableAnimationForIndex(hapticFeedback)
+                            disableAnimationForIndex(hapticFeedback)
 
-                        swipeOffset = 0f
+                            swipeOffset = 0f
 
-                        gestureConsumed = false
-                        indexSelected = 0
-                    },
-                    onDrag = { change, dragAmount ->
-                        var isMovingLeft = false
-                        var isMovingRight = false
+                            gestureConsumed = false
+                            indexSelected = 0
+                        },
+                        onDrag = { change, dragAmount ->
+                            var isMovingLeft = false
+                            var isMovingRight = false
 
-                        val sensitivity = 80
-                        swipeOffset += dragAmount.x
-                        when {
-                            swipeOffset > sensitivity -> {
-                                if (!gestureConsumed) {
-                                    isMovingRight = true
-                                    gestureConsumed = true
+                            val sensitivity = 80
+                            swipeOffset += dragAmount.x
+                            when {
+                                swipeOffset > sensitivity -> {
+                                    if (!gestureConsumed) {
+                                        isMovingRight = true
+                                        gestureConsumed = true
+                                    }
+                                }
+
+                                swipeOffset < -sensitivity -> {
+                                    if (!gestureConsumed) {
+                                        isMovingLeft = true
+                                        gestureConsumed = true
+                                    }
                                 }
                             }
 
-                            swipeOffset < -sensitivity -> {
-                                if (!gestureConsumed) {
-                                    isMovingLeft = true
-                                    gestureConsumed = true
+
+                            when {
+                                isMovingLeft -> {
+                                    if (indexSelected == 0) {
+                                        return@detectDragGesturesAfterLongPress
+                                    }
+                                    enableAnimationIndex(hapticFeedback, indexSelected)
+
+                                    gestureConsumed = false
+                                    indexSelected -= 1
+                                    swipeOffset = 0f
+                                }
+
+                                isMovingRight -> {
+                                    if (indexSelected == icons.size.minus(1)) {
+                                        return@detectDragGesturesAfterLongPress
+                                    }
+                                    enableAnimationIndex(hapticFeedback, indexSelected)
+
+                                    gestureConsumed = false
+                                    indexSelected += 1
+                                    swipeOffset = 0f
                                 }
                             }
-                        }
 
 
-                        when {
-                            isMovingLeft -> {
-                                if (indexSelected == 0) {
-                                    return@detectDragGesturesAfterLongPress
-                                }
-                                enableAnimationIndex(hapticFeedback, indexSelected)
-
-                                gestureConsumed = false
-                                indexSelected -= 1
-                                swipeOffset = 0f
-                            }
-                            isMovingRight -> {
-                                if (indexSelected == icons.size.minus(1)) {
-                                    return@detectDragGesturesAfterLongPress
-                                }
-                                enableAnimationIndex(hapticFeedback, indexSelected)
-
-                                gestureConsumed = false
-                                indexSelected += 1
-                                swipeOffset = 0f
-                            }
-                        }
-
-
-                    })
-            })
+                        })
+                })
         }
     }
 }
@@ -177,13 +194,13 @@ private fun disableAnimationForIndex(hapticFeedback: HapticFeedback) {
 private fun BoxScope.BGBlur() {
     Box(
         modifier = Modifier.Companion
+            .fillMaxWidth()
             .align(Alignment.BottomCenter)
             .background(
                 Color.White.copy(alpha = 0.4f),
                 shape = RoundedCornerShape(30)
             )
             .height(48.dp)
-            .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .blur(12.dp)
     )
@@ -209,7 +226,7 @@ fun DockIcon(icon: MyDockIcon, modifier: Modifier) {
     })
 
     Image(
-        painter = painterResource(id = icon.drawable),
+        painter = icon.drawable.invoke(),
         contentDescription = null,
         modifier = modifier
             .size(48.dp)
@@ -219,9 +236,9 @@ fun DockIcon(icon: MyDockIcon, modifier: Modifier) {
     )
 }
 
-data class MyDockIcon(var drawable: Int) {
+data class MyDockIcon(var drawable: @Composable () -> Painter) {
     var scaledValue: Float = 2f
-    var zIndex = 1f
+    var zIndex = 100f
     var shouldAnimate: Boolean = false
     val changeObserver = Channel<Unit>()
 
@@ -231,67 +248,36 @@ data class MyDockIcon(var drawable: Int) {
 }
 
 val icons = listOf(
-    MyDockIcon(R.drawable.keychain),
-    MyDockIcon(R.drawable.news),
-    MyDockIcon(R.drawable.safari),
-    MyDockIcon(R.drawable.timemachine),
-    MyDockIcon(R.drawable.systempreferences),
-    MyDockIcon(R.drawable.colorsync),
-    MyDockIcon(R.drawable.migration),
-    MyDockIcon(R.drawable.quicktime),
-    MyDockIcon(R.drawable.contacts),
-    MyDockIcon(R.drawable.dictionary),
-    MyDockIcon(R.drawable.music),
-    MyDockIcon(R.drawable.stocks),
-    MyDockIcon(R.drawable.grapher),
-    MyDockIcon(R.drawable.messages),
-    MyDockIcon(R.drawable.siri),
-    MyDockIcon(R.drawable.findmy),
-    MyDockIcon(R.drawable.imagecapture),
-    MyDockIcon(R.drawable.calendar),
-    MyDockIcon(R.drawable.calculator),
-    MyDockIcon(R.drawable.launchpad),
-    MyDockIcon(R.drawable.screenshot),
-    MyDockIcon(R.drawable.maps),
-    MyDockIcon(R.drawable.diskutility),
-    MyDockIcon(R.drawable.feedbackassistant),
-    MyDockIcon(R.drawable.mail),
-    MyDockIcon(R.drawable.facetime),
-    MyDockIcon(R.drawable.textedit),
-    MyDockIcon(R.drawable.scripteditor),
-    MyDockIcon(R.drawable.systeminfo),
-    MyDockIcon(R.drawable.tv),
-    MyDockIcon(R.drawable.stickies),
-    MyDockIcon(R.drawable.reminders),
-    MyDockIcon(R.drawable.midi),
-    MyDockIcon(R.drawable.automator),
-    MyDockIcon(R.drawable.home),
-    MyDockIcon(R.drawable.appstore),
-    MyDockIcon(R.drawable.voicememos),
-    MyDockIcon(R.drawable.bluetoothfile),
-    MyDockIcon(R.drawable.activitymonitor),
-    MyDockIcon(R.drawable.colormeter),
-    MyDockIcon(R.drawable.voiceover),
-    MyDockIcon(R.drawable.airportutility),
-    MyDockIcon(R.drawable.bootcamp),
-    MyDockIcon(R.drawable.notes),
-    MyDockIcon(R.drawable.missioncontrol),
-    MyDockIcon(R.drawable.terminal),
-    MyDockIcon(R.drawable.console),
-    MyDockIcon(R.drawable.books),
-    MyDockIcon(R.drawable.fontbook),
-    MyDockIcon(R.drawable.chess),
-    MyDockIcon(R.drawable.podcasts),
-    MyDockIcon(R.drawable.preview),
-    MyDockIcon(R.drawable.photos),
-    MyDockIcon(R.drawable.photobooth),
+    MyDockIcon { PainterRes.keychain() },
+    MyDockIcon { PainterRes.news() },
+    MyDockIcon { PainterRes.safari() },
+    MyDockIcon { PainterRes.timemachine() },
+    MyDockIcon { PainterRes.systempreferences() },
+    MyDockIcon { PainterRes.colorsync() },
+    MyDockIcon { PainterRes.migration() },
+    MyDockIcon { PainterRes.quicktime() },
+    MyDockIcon { PainterRes.contacts() },
+    MyDockIcon { PainterRes.dictionary() },
+    MyDockIcon { PainterRes.music() },
+    MyDockIcon { PainterRes.stocks() },
+    MyDockIcon { PainterRes.keychain() },
+    MyDockIcon { PainterRes.news() },
+    MyDockIcon { PainterRes.safari() },
+    MyDockIcon { PainterRes.timemachine() },
+    MyDockIcon { PainterRes.systempreferences() },
+    MyDockIcon { PainterRes.colorsync() },
+    MyDockIcon { PainterRes.migration() },
+    MyDockIcon { PainterRes.quicktime() },
+    MyDockIcon { PainterRes.contacts() },
+    MyDockIcon { PainterRes.dictionary() },
+    MyDockIcon { PainterRes.music() },
+    MyDockIcon { PainterRes.stocks() },
 )
 
 
-@Preview
 @Composable
 fun PreviewMacOsxDock() {
     MaterialTheme {
         MacOsxDock()
     }
-}*/
+}

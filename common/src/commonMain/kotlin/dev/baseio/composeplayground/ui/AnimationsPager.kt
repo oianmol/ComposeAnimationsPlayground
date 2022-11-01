@@ -52,7 +52,9 @@ fun AnimationsPager(modifier: Modifier) {
 }
 
 val animations = mutableListOf<@Composable () -> Unit>().apply {
-
+    add{
+        MacOsxDock()
+    }
     add {
         IOSSleepSchedule()
     }

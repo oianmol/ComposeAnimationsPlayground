@@ -56,4 +56,80 @@ actual object PainterRes {
 
     @Composable
     actual fun ic_bed(): Painter = painterResource(R.drawable.ic_bed)
+
+    @Composable
+    actual fun applewall(): Painter = painterResource(
+        R.drawable.applewall
+
+    )
+
+    @Composable
+    actual fun keychain(): Painter = painterResource(
+        R.drawable.keychain
+
+    )
+
+    @Composable
+    actual fun news(): Painter = painterResource(
+        R.drawable.news
+
+    )
+
+    @Composable
+    actual fun safari(): Painter = painterResource(
+        R.drawable.safari
+
+    )
+
+    @Composable
+    actual fun timemachine(): Painter = painterResource(
+        R.drawable.timemachine
+
+    )
+
+    @Composable
+    actual fun systempreferences(): Painter = painterResource(
+        R.drawable.systempreferences
+
+    )
+
+    @Composable
+    actual fun colorsync(): Painter = painterResource(
+        R.drawable.colorsync
+
+    )
+
+    @Composable
+    actual fun migration(): Painter = painterResource(
+        R.drawable.migration
+
+    )
+
+    @Composable
+    actual fun quicktime(): Painter = painterResource(
+        R.drawable.quicktime
+
+    )
+
+    @Composable
+    actual fun contacts(): Painter = painterResource(
+        R.drawable.contacts
+
+    )
+
+    @Composable
+    actual fun dictionary(): Painter = painterResource(
+        R.drawable.dictionary
+    )
+
+    @Composable
+    actual fun music(): Painter = painterResource(
+        R.drawable.music
+
+    )
+
+    @Composable
+    actual fun stocks(): Painter = painterResource(
+        R.drawable.stocks
+    )
 }

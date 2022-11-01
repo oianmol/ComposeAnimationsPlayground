@@ -1,4 +1,4 @@
-package dev.baseio.composeplayground.ui.animations
+package dev.baseio.composeplayground.ui.animations.anmolverma
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -27,16 +27,13 @@ import dev.baseio.common.LocalWindow
 import dev.baseio.common.PainterRes
 import dev.baseio.common.WindowSize
 import dev.baseio.common.getWindowSizeClass
-import dev.baseio.composeplayground.ui.animations.anmolverma.drawText
 import dev.baseio.composeplayground.ui.animations.anmolverma.googleio2022.PaintMode
-import dev.baseio.composeplayground.ui.animations.anmolverma.toRadians
 import dev.baseio.composeplayground.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import kotlin.math.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.ExperimentalTime
 
 
 const val DEGREE_IN_HOUR = 15f
