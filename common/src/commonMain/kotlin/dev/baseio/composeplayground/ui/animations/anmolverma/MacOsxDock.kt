@@ -22,8 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -88,12 +86,11 @@ private fun BoxScope.IconsRow() {
     ) {
         itemsIndexed(icons) { index, item ->
             DockIcon(item, Modifier
-                .onPointerEvent(PointerEventType.Enter) {
+                .desktopModifier({
                     indexSelected = index
                     item.shouldAnimate = true
                     item.onAnimateRequested()
-                }
-                .onPointerEvent(PointerEventType.Exit) {
+                }) {
                     indexSelected = 0
                     item.shouldAnimate = false
                     item.onAnimateRequested()
@@ -170,6 +167,8 @@ private fun BoxScope.IconsRow() {
         }
     }
 }
+
+expect fun Modifier.Companion.desktopModifier(enter: () -> Unit, exit: () -> Unit): Modifier
 
 private fun enableAnimationIndex(
     hapticFeedback: HapticFeedback,
