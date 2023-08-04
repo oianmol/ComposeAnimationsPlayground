@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
@@ -38,8 +39,59 @@ fun NetFlixSplashAnim() {
                 DrawT()
                 Spacer(Modifier.width(10.dp))
                 DrawF()
+                Spacer(Modifier.width(10.dp))
+                DrawL()
+                Spacer(Modifier.width(10.dp))
+                DrawI()
+                Spacer(Modifier.width(25.dp))
+                DrawX()
             }
         }
+    }
+}
+
+@Composable
+fun DrawX() {
+    Box {
+        // X
+        Block(
+            Modifier.width(10.dp)
+                .fillMaxHeight()
+                .graphicsLayer {
+                    this.rotationZ = 150f
+                }
+        )
+        Block(
+            Modifier.width(10.dp)
+                .fillMaxHeight()
+                .graphicsLayer {
+                    this.rotationZ = 35f
+                }
+        )
+    }
+}
+
+@Composable
+fun DrawI() {
+    // I
+    Block(
+        Modifier.width(10.dp)
+            .fillMaxHeight()
+    )
+}
+
+@Composable
+fun DrawL() {
+    Column(horizontalAlignment = Alignment.Start) {
+        // L
+        Block(
+            Modifier.width(10.dp)
+                .fillMaxHeight(0.8f)
+        )
+        Block(
+            Modifier.width(30.dp)
+                .height(10.dp)
+        )
     }
 }
 
@@ -48,7 +100,7 @@ fun DrawF(isE: Boolean = false) {
     Row {
         // E
         Block(
-            Modifier.width(15.dp)
+            Modifier.width(10.dp)
                 .fillMaxHeight()
         )
         Column(
@@ -92,18 +144,18 @@ private fun DrawN() {
     Row {
         // N
         Block(
-            Modifier.width(15.dp)
+            Modifier.width(10.dp)
                 .fillMaxHeight()
         )
         Block(
-            Modifier.width(15.dp)
+            Modifier.width(10.dp)
                 .fillMaxHeight()
                 .graphicsLayer {
-                    this.rotationZ = 155f
+                    this.rotationZ = 160f
                 }
         )
         Block(
-            Modifier.width(15.dp)
+            Modifier.width(10.dp)
                 .fillMaxHeight()
         )
     }
