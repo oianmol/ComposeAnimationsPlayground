@@ -52,6 +52,9 @@ fun AnimationsPager(modifier: Modifier) {
 }
 
 val animations = mutableListOf<@Composable () -> Unit>().apply {
+    add {
+        NetFlixSplashAnim()
+    }
     add{
         MacOsxDock()
     }
