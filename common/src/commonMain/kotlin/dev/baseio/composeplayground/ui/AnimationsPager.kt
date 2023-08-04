@@ -3,8 +3,6 @@ package dev.baseio.composeplayground.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
@@ -53,7 +51,7 @@ fun AnimationsPager(modifier: Modifier) {
 
 val animations = mutableListOf<@Composable () -> Unit>().apply {
     add {
-        NetFlixSplashAnim()
+        NetflixSplashAnim()
     }
     add{
         MacOsxDock()
